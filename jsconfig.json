@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "baseUrl": "src",
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/components/*": ["./components/*"],
+      "@/contexts/*": ["./contexts/*"]
+    }
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
