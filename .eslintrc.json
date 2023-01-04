@@ -11,11 +11,10 @@
       "version": "detect"
     }
   },
-  "plugins": ["@next/eslint-plugin-next", "testing-library"],
+  "plugins": ["testing-library"],
   "extends": [
     "eslint:recommended",
     "plugin:react/recommended",
-    "plugin:@next/next/recommended",
     "plugin:jest/recommended",
     "next/core-web-vitals",
     "prettier"
