@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Head from 'next/head';
 import styled from '@emotion/styled';
 import {
@@ -10,11 +10,18 @@ import {
   useSendTransaction,
   useSignMessage,
   useSwitchNetwork,
+  useWaitForTransaction,
 } from 'wagmi';
 import { Button, CircularProgress, TextField } from '@mui/material';
 import { parseEther } from 'ethers/lib/utils';
 
 import useMounted from '../hooks/useMounted';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  findPendingTxHash,
+  removeAddressToPendingTxHash,
+  setAddressToPendingTxHash,
+} from 'store/transaction';
 
 const PageContainer = styled.section`
   display: flex;
@@ -131,6 +138,8 @@ const ErrorContent = styled.div`
 `;
 
 export default function IndexPage() {
+  const dispatch = useDispatch();
+
   const {
     connect,
     connectors,
@@ -159,8 +168,6 @@ export default function IndexPage() {
     error: errorSignMessage,
   } = useSignMessage();
 
-  const [isReadyToSend, setIsReadyToSend] = useState(false);
-
   const [toInput, setToInput] = useState('');
   const [valueInput, setValueInput] = useState('');
 
@@ -170,15 +177,57 @@ export default function IndexPage() {
       to: toInput,
       value: parseEther(valueInput || '0'),
     },
-    enabled: isReadyToSend,
+    enabled: !!toInput && !!valueInput,
   });
 
   const {
     sendTransaction,
-    status: txStatus,
+    status: sendTxStatus,
     data: txResult,
     error: errorSendTx,
-  } = useSendTransaction(config);
+  } = useSendTransaction({
+    ...config,
+    onSuccess(data) {
+      dispatch(setAddressToPendingTxHash({ txHash: data.hash, address }));
+    },
+  });
+
+  const { pendingTxHash, latestTxHash, pendingTxHashQueue } = useSelector(
+    ({ transaction }) => ({
+      pendingTxHash: transaction.pendingTxHash,
+      latestTxHash: transaction.latestTxHash,
+      pendingTxHashQueue: transaction.pendingTxHashQueue,
+    }),
+  );
+
+  const pendingTxCount = useMemo(
+    () => pendingTxHashQueue.length,
+    [pendingTxHashQueue],
+  );
+
+  const { status: waitTxStatus } = useWaitForTransaction({
+    hash: pendingTxHash,
+  });
+
+  const { data: latestTxReceipt } = useWaitForTransaction({
+    hash: latestTxHash,
+  });
+
+  useEffect(() => {
+    if (
+      pendingTxHash &&
+      address &&
+      (waitTxStatus === 'success' || waitTxStatus === 'error')
+    ) {
+      dispatch(removeAddressToPendingTxHash({ address }));
+    }
+  }, [dispatch, waitTxStatus, pendingTxHash, address]);
+
+  useEffect(() => {
+    if (address) {
+      dispatch(findPendingTxHash({ address }));
+    }
+  }, [dispatch, address]);
 
   return (
     <PageContainer>
@@ -307,8 +356,16 @@ export default function IndexPage() {
           <CardTitle>Transaction Test</CardTitle>
           <CardContentList>
             <CardContentItem>
-              <h3>Status</h3>
-              <p>{txStatus}</p>
+              <h3>Send Tx Status</h3>
+              <p>{sendTxStatus}</p>
+            </CardContentItem>
+            <CardContentItem>
+              <h3>Wait Tx Status</h3>
+              <p>{waitTxStatus}</p>
+            </CardContentItem>
+            <CardContentItem>
+              <h3>Pending Tx Count</h3>
+              <p>{pendingTxCount}</p>
             </CardContentItem>
             <CardContentItem>
               <h3>Send</h3>
@@ -331,7 +388,6 @@ export default function IndexPage() {
                 />
                 <Button
                   onClick={() => {
-                    setIsReadyToSend(true);
                     sendTransaction?.();
                   }}
                 >
@@ -339,14 +395,19 @@ export default function IndexPage() {
                 </Button>
               </CardActionGroup>
             </CardContentItem>
+
             <CardContentList>
-              {txResult && (
-                <>
-                  <CardResultBox>
-                    <h3>Tx Hash</h3>
-                    <p>{txResult.hash}</p>
-                  </CardResultBox>
-                </>
+              {(txResult || latestTxHash) && (
+                <CardResultBox>
+                  <h3>Latest Tx Hash</h3>
+                  <p>{txResult?.hash || latestTxHash}</p>
+                </CardResultBox>
+              )}
+              {latestTxReceipt && (
+                <CardResultBox>
+                  <h3>Latest Tx Receipt</h3>
+                  <p>{JSON.stringify(latestTxReceipt)}</p>
+                </CardResultBox>
               )}
             </CardContentList>
           </CardContentList>
