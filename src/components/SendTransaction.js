@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   useAccount,
@@ -9,7 +9,11 @@ import {
 import { parseEther } from 'ethers/lib/utils';
 import { Button, TextField } from '@mui/material';
 
-import { setAddressToPendingTxHash } from '../store/transaction';
+import {
+  findPendingTxHash,
+  removeAddressToPendingTxHash,
+  setAddressToPendingTxHash,
+} from '../store/transaction';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';
@@ -62,6 +66,22 @@ const SendTransaction = () => {
   const { data: latestTxReceipt } = useWaitForTransaction({
     hash: latestTxHash,
   });
+
+  useEffect(() => {
+    if (
+      pendingTxHash &&
+      address &&
+      (waitTxStatus === 'success' || waitTxStatus === 'error')
+    ) {
+      dispatch(removeAddressToPendingTxHash({ address }));
+    }
+  }, [dispatch, waitTxStatus, pendingTxHash, address]);
+
+  useEffect(() => {
+    if (address) {
+      dispatch(findPendingTxHash({ address }));
+    }
+  }, [dispatch, address]);
 
   return (
     <Card.Section>
