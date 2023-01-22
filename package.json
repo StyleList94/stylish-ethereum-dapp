@@ -33,7 +33,7 @@
     "react-select": "^5.4.0",
     "react-toastify": "^9.0.8",
     "react-use": "^17.4.0",
-    "wagmi": "^0.10.3"
+    "wagmi": "^0.10.12"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
