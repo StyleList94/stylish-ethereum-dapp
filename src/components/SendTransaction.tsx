@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import {
   useAccount,
   usePrepareSendTransaction,
@@ -9,17 +8,18 @@ import {
 import { parseEther } from 'ethers/lib/utils';
 import { Button, TextField } from '@mui/material';
 
+import { useAppDispatch, useAppSelector } from 'store/hooks';
 import {
   findPendingTxHash,
   removeAddressToPendingTxHash,
   setAddressToPendingTxHash,
-} from '../store/transaction';
+} from 'store/transaction';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';
 
 const SendTransaction = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [toInput, setToInput] = useState('');
   const [valueInput, setValueInput] = useState('');
@@ -42,11 +42,12 @@ const SendTransaction = () => {
   } = useSendTransaction({
     ...config,
     onSuccess(data) {
-      dispatch(setAddressToPendingTxHash({ txHash: data.hash, address }));
+      address &&
+        dispatch(setAddressToPendingTxHash({ txHash: data.hash, address }));
     },
   });
 
-  const { pendingTxHash, latestTxHash, pendingTxHashQueue } = useSelector(
+  const { pendingTxHash, latestTxHash, pendingTxHashQueue } = useAppSelector(
     ({ transaction }) => ({
       pendingTxHash: transaction.pendingTxHash,
       latestTxHash: transaction.latestTxHash,
@@ -60,11 +61,11 @@ const SendTransaction = () => {
   );
 
   const { status: waitTxStatus } = useWaitForTransaction({
-    hash: pendingTxHash,
+    hash: pendingTxHash ?? undefined,
   });
 
   const { data: latestTxReceipt } = useWaitForTransaction({
-    hash: latestTxHash,
+    hash: latestTxHash ?? undefined,
   });
 
   useEffect(() => {

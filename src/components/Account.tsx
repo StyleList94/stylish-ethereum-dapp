@@ -59,16 +59,18 @@ const Account = () => {
                   key={`connector-${connector.id}`}
                   onClick={() => connect({ connector })}
                   disabled={
-                    isConnecting && pendingConnector.id === connector.id
+                    isConnecting && pendingConnector?.id === connector.id
                   }
                 >
                   {connector.id}({connector.name})
-                  {isConnecting && pendingConnector.id === connector.id && (
+                  {isConnecting && pendingConnector?.id === connector.id && (
                     <CircularProgress size={16} />
                   )}
                 </Button>
               ))}
-            {isConnected && <Button onClick={disconnect}>Disconnect</Button>}
+            {isConnected && (
+              <Button onClick={() => disconnect()}>Disconnect</Button>
+            )}
           </Card.ActionGroup>
         </Card.ContentItem>
       )}

@@ -1,6 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
+import type { PayloadAction } from '@reduxjs/toolkit';
+
+type State = {
+  prev: string;
+};
+
+const initialState: State = {
   prev: '/',
 };
 
@@ -8,7 +14,7 @@ export const pageSlice = createSlice({
   name: 'page',
   initialState,
   reducers: {
-    setPrevPage: (state, action) => {
+    setPrevPage: (state, action: PayloadAction<string>) => {
       state.prev = action.payload;
     },
   },

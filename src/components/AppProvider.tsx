@@ -1,3 +1,4 @@
+import React from 'react';
 import { Global } from '@emotion/react';
 import { configureChains, WagmiConfig, createClient } from 'wagmi';
 import {
@@ -38,7 +39,7 @@ const client = createClient({
   ],
 });
 
-const AppProvider = ({ children }) => {
+const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <Provider store={store}>
       <WagmiConfig client={client}>

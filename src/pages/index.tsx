@@ -2,7 +2,9 @@ import Head from 'next/head';
 import { useAccount } from 'wagmi';
 import styled from '@emotion/styled';
 
-import useMounted from '../hooks/useMounted';
+import useMounted from 'hooks/useMounted';
+
+import type { ReactElement } from 'react';
 
 import Account from '@/components/Account';
 import Network from '@/components/Network';
@@ -40,7 +42,7 @@ export default function IndexPage() {
   );
 }
 
-IndexPage.getLayout = (page) => (
+IndexPage.getLayout = (page: ReactElement) => (
   <>
     <Head>
       <title>Stylish Ethereum DApp</title>

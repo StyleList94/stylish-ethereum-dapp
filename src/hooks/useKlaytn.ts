@@ -3,7 +3,12 @@ import Caver from 'caver-js';
 import {
   KlaytnStateContext,
   KlaytnDispatchContext,
-} from '../contexts/KlaytnContext';
+} from '@/contexts/KlaytnContext';
+
+const KLAYTN_RPC_URL =
+  process.env.NEXT_PUBLIC_ENV === 'dev'
+    ? 'https://api.baobab.klaytn.net:8651/'
+    : 'https://public-node-api.klaytnapi.com/v1/cypress';
 
 export default function useKlaytn() {
   const state = React.useContext(KlaytnStateContext);
@@ -14,10 +19,10 @@ export default function useKlaytn() {
   }
 
   const setAccountInfo = React.useCallback(
-    async (accounts) => {
-      const localCaver = new Caver(state.klaytn);
+    async (accounts: string[]) => {
+      const localCaver = new Caver(KLAYTN_RPC_URL);
 
-      const account = state.klaytn.selectedAddress || accounts[0];
+      const account = state.klaytn?.selectedAddress || accounts[0];
       const balance = await localCaver.klay.getBalance(account);
       dispatch({ type: 'SET_ACCOUNT', payload: account });
       dispatch({
@@ -25,7 +30,7 @@ export default function useKlaytn() {
         payload: localCaver.utils.fromPeb(balance, 'KLAY'),
       });
     },
-    [state.klaytn, dispatch]
+    [state.klaytn, dispatch],
   );
 
   const activate = React.useCallback(async () => {
@@ -57,13 +62,13 @@ export default function useKlaytn() {
 
   React.useEffect(() => {
     if (state.klaytn) {
-      dispatch({ type: 'SET_CAVER', payload: new Caver(state.klaytn) });
+      dispatch({ type: 'SET_CAVER', payload: new Caver(KLAYTN_RPC_URL) });
     }
   }, [state.klaytn, dispatch]);
 
   const key = React.useMemo(
     () => ({ ...state, activate, deactivate }),
-    [state, activate, deactivate]
+    [state, activate, deactivate],
   );
 
   return { ...key };

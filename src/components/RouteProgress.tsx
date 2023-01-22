@@ -1,3 +1,4 @@
+/* eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access */
 import { css, Global } from '@emotion/react';
 import Router from 'next/router';
 import NProgress from 'nprogress';
