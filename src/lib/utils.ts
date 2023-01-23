@@ -5,8 +5,8 @@ export const shortenAddress = (account: string) =>
 
 export const getElementToEmotionCssName = (
   container: HTMLElement,
-  tagName = 'div',
   cssName: string,
+  tagName = 'div',
 ): Element | undefined =>
   Array.from(container.getElementsByTagName(tagName)).find((element) =>
     element.className.match(new RegExp(cssName)),

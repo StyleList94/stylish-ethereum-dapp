@@ -53,7 +53,7 @@ export const transactionSlice = createSlice({
           (JSON.parse(pendingTxList) as PendingTxList)?.[address] ?? [];
 
         state.pendingTxHashQueue = txHashQueue;
-        state.pendingTxHash = txHashQueue[0];
+        state.pendingTxHash = txHashQueue[0] || null;
       }
     },
     setAddressToPendingTxHash: (
@@ -80,7 +80,7 @@ export const transactionSlice = createSlice({
         }),
       );
 
-      state.pendingTxHash = nextPendingTxHashQueue[0];
+      state.pendingTxHash = nextPendingTxHashQueue[0] || null;
       state.pendingTxHashQueue = nextPendingTxHashQueue;
     },
     removeAddressToPendingTxHash: (
@@ -111,7 +111,7 @@ export const transactionSlice = createSlice({
             );
           }
         } else {
-          state.pendingTxHash = txHashQueue[0];
+          state.pendingTxHash = txHashQueue[0] || null;
           state.pendingTxHashQueue = txHashQueue;
           localStorage.setItem(
             `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,

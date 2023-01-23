@@ -39,19 +39,17 @@ const client = createClient({
   ],
 });
 
-const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <Provider store={store}>
-      <WagmiConfig client={client}>
-        <KlaytnProvider>
-          <RouteProgress />
-          <Global styles={styles} />
-          {children}
-          <ToastContainer />
-        </KlaytnProvider>
-      </WagmiConfig>
-    </Provider>
-  );
-};
+const AppProvider = ({ children }: { children: React.ReactNode }) => (
+  <Provider store={store}>
+    <WagmiConfig client={client}>
+      <KlaytnProvider>
+        <RouteProgress />
+        <Global styles={styles} />
+        {children}
+        <ToastContainer />
+      </KlaytnProvider>
+    </WagmiConfig>
+  </Provider>
+);
 
 export default AppProvider;

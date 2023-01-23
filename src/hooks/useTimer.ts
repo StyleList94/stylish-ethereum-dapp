@@ -37,7 +37,7 @@ export const useTimer = (launch: string) => {
       count.current = getCountdownMillisecond();
       isMount.current = true;
     }
-    count.current = count.current - 10;
+    count.current -= 10;
     const countSec = parseInt(String(count.current / 1000), 10);
 
     setStartTime({
@@ -49,14 +49,15 @@ export const useTimer = (launch: string) => {
 
   const handleVisibilityChange = useCallback(() => {
     if (document.hidden) {
-      countdown.current && clearInterval(countdown.current);
+      if (countdown.current) {
+        clearInterval(countdown.current);
+      }
+
       countdown.current = null;
 
       isMount.current = false;
-    } else {
-      if (!countdown.current) {
-        countdown.current = setInterval(countdownInterval, 10);
-      }
+    } else if (!countdown.current) {
+      countdown.current = setInterval(countdownInterval, 10);
     }
   }, [countdownInterval]);
 
@@ -100,7 +101,10 @@ export const useTimer = (launch: string) => {
     if (count.current && +count.current <= 0) {
       setIsTimerDone(true);
       setStartTime(null);
-      countdown.current && clearInterval(countdown.current);
+
+      if (countdown.current) {
+        clearInterval(countdown.current);
+      }
     }
   }, [startTime]);
 

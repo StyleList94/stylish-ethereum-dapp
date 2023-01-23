@@ -42,8 +42,9 @@ const SendTransaction = () => {
   } = useSendTransaction({
     ...config,
     onSuccess(data) {
-      address &&
+      if (address) {
         dispatch(setAddressToPendingTxHash({ txHash: data.hash, address }));
+      }
     },
   });
 

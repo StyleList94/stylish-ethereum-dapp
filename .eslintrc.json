@@ -21,7 +21,7 @@
     "sourceType": "module"
   },
   "ignorePatterns": ["*.config.js", "jest.setup.js"],
-  "plugins": ["@typescript-eslint","testing-library"],
+  "plugins": ["@typescript-eslint", "testing-library"],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
@@ -44,12 +44,28 @@
     }
   ],
   "rules": {
-    "react/react-in-jsx-scope": "off",
+    "consistent-return": ["error", { "treatUndefinedAsUnspecified": false }],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": true,
+        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$"]
+      }
+    ],
+    "react/function-component-definition": [
+      2,
+      {
+        "namedComponents": ["arrow-function", "function-declaration"],
+        "unnamedComponents": "arrow-function"
+      }
+    ],
     "react/jsx-filename-extension": [1, { "extensions": [".js", "ts", "tsx"] }],
     "react/prop-types": "off",
+    "react/react-in-jsx-scope": "off",
     "react/jsx-props-no-spreading": "off",
     "react-hooks/rules-of-hooks": "error",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-empty-interface": "off"
+    "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/return-await": "off"
   }
 }

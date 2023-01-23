@@ -2,7 +2,7 @@ import React from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { Button, CircularProgress } from '@mui/material';
 
-import useMounted from '../hooks/useMounted';
+import useMounted from 'hooks/useMounted';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';

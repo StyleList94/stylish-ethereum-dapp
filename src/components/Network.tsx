@@ -35,12 +35,12 @@ const Network = () => {
       <Card.ContentItem>
         <h3>Switch To</h3>
         <Card.ActionGroup>
-          {chains.map((chain) => (
+          {chains.map((chainItem) => (
             <Button
-              key={`${chain.id}-${chain.name}`}
-              onClick={() => switchNetwork?.(chain.id)}
+              key={`${chainItem.id}-${chainItem.name}`}
+              onClick={() => switchNetwork?.(chainItem.id)}
             >
-              {chain.name}
+              {chainItem.name}
             </Button>
           ))}
         </Card.ActionGroup>
