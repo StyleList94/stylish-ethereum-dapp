@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 
 const ErrorContent = styled.div`
+  overflow: auto;
   display: flex;
   flex-direction: column;
   gap: 0.25rem;

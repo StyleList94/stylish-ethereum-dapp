@@ -1,14 +1,12 @@
 import React from 'react';
 import Caver from 'caver-js';
+
+import type { IpcProvider } from 'caver-js';
+
 import {
   KlaytnStateContext,
   KlaytnDispatchContext,
 } from '@/contexts/KlaytnContext';
-
-const KLAYTN_RPC_URL =
-  process.env.NEXT_PUBLIC_ENV === 'dev'
-    ? 'https://api.baobab.klaytn.net:8651/'
-    : 'https://public-node-api.klaytnapi.com/v1/cypress';
 
 export default function useKlaytn() {
   const state = React.useContext(KlaytnStateContext);
@@ -20,7 +18,7 @@ export default function useKlaytn() {
 
   const setAccountInfo = React.useCallback(
     async (accounts: string[]) => {
-      const localCaver = new Caver(KLAYTN_RPC_URL);
+      const localCaver = new Caver(state.klaytn as IpcProvider);
 
       const account = state.klaytn?.selectedAddress || accounts[0];
       const balance = await localCaver.klay.getBalance(account);
@@ -33,7 +31,7 @@ export default function useKlaytn() {
     [state.klaytn, dispatch],
   );
 
-  const activate = React.useCallback(async () => {
+  const connect = React.useCallback(async () => {
     if (state.klaytn) {
       try {
         const accounts = await state.klaytn.enable();
@@ -45,30 +43,52 @@ export default function useKlaytn() {
       } catch (error) {
         throw new Error('User denied account');
       }
-      dispatch({ type: 'SET_ACTIVE', payload: true });
+      dispatch({ type: 'SET_IS_CONNECTED', payload: true });
     } else {
       throw new Error('Klaytn wallet is not available');
     }
   }, [state.klaytn, setAccountInfo, dispatch]);
 
-  const deactivate = React.useCallback(() => {
+  const disconnect = React.useCallback(() => {
     dispatch({ type: 'SET_ACCOUNT', payload: null });
     dispatch({
       type: 'SET_BALANCE',
       payload: null,
     });
-    dispatch({ type: 'SET_ACTIVE', payload: false });
+    dispatch({ type: 'SET_IS_CONNECTED', payload: false });
   }, [dispatch]);
 
   React.useEffect(() => {
     if (state.klaytn) {
-      dispatch({ type: 'SET_CAVER', payload: new Caver(KLAYTN_RPC_URL) });
+      dispatch({
+        type: 'SET_CAVER',
+        payload: new Caver(state.klaytn as IpcProvider),
+      });
+
+      state.klaytn.on('accountsChanged', async () => {
+        await connect();
+      });
+      state.klaytn.on('networkChanged', async (networkId: number) => {
+        window.klaytn.networkVersion = networkId;
+        await connect();
+      });
+      state.klaytn.on('disconnected', () => {
+        disconnect();
+      });
     }
-  }, [state.klaytn, dispatch]);
+
+    return () => {
+      if (state.klaytn) {
+        state.klaytn.on('accountsChanged', () => {});
+        state.klaytn.on('networkChanged', () => {});
+        state.klaytn.on('disconnected', () => {});
+      }
+    };
+  }, [state.klaytn, connect, disconnect, dispatch]);
 
   const key = React.useMemo(
-    () => ({ ...state, activate, deactivate }),
-    [state, activate, deactivate],
+    () => ({ ...state, connect, disconnect }),
+    [state, connect, disconnect],
   );
 
   return { ...key };

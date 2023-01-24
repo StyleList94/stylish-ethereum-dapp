@@ -1,21 +1,21 @@
 import React from 'react';
-import Caver from 'caver-js';
+import Caver, { IpcProvider } from 'caver-js';
 
 import type { Dispatch } from 'react';
 import type { Klaytn } from 'types/klaytn';
 
 type State = {
-  klaytn: Klaytn | null;
+  klaytn: (Klaytn & IpcProvider) | null;
   account: string | null;
   balance: string | null;
   caver: Caver | null;
-  active: boolean;
+  isConnected: boolean;
 };
 
 type Action =
   | {
       type: 'SET_KLAYTN';
-      payload: Klaytn | null;
+      payload: (Klaytn & IpcProvider) | null;
     }
   | {
       type: 'SET_ACCOUNT';
@@ -30,7 +30,7 @@ type Action =
       payload: Caver | null;
     }
   | {
-      type: 'SET_ACTIVE';
+      type: 'SET_IS_CONNECTED';
       payload: boolean;
     };
 
@@ -58,10 +58,10 @@ function reducer(state: State, action: Action) {
         ...state,
         caver: action.payload,
       };
-    case 'SET_ACTIVE':
+    case 'SET_IS_CONNECTED':
       return {
         ...state,
-        active: action.payload,
+        isConnected: action.payload,
       };
     default:
       return state;
@@ -72,7 +72,7 @@ const initialState: State = {
   account: null,
   balance: null,
   caver: null,
-  active: false,
+  isConnected: false,
 };
 
 export const KlaytnStateContext = React.createContext<State | null>(null);

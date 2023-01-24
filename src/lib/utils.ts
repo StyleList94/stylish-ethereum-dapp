@@ -11,3 +11,6 @@ export const getElementToEmotionCssName = (
   Array.from(container.getElementsByTagName(tagName)).find((element) =>
     element.className.match(new RegExp(cssName)),
   );
+
+export const shortenKaikasRpcErrorMessage = (message: string): string =>
+  message.split('\n')[0];
