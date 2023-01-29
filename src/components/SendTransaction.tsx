@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   useAccount,
   usePrepareSendTransaction,
@@ -6,7 +6,8 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import { parseEther } from 'ethers/lib/utils';
-import { Button, TextField } from '@mui/material';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import {
@@ -129,28 +130,27 @@ const SendTransaction = () => {
             </Button>
           </Card.ActionGroup>
         </Card.ContentItem>
-
-        <Card.ContentList>
-          {(txResult || latestTxHash) && (
-            <Card.ResultBox>
-              <h3>Latest Tx Hash</h3>
-              <p>{txResult?.hash || latestTxHash}</p>
-            </Card.ResultBox>
-          )}
-          {latestTxReceipt && (
-            <Card.ResultBox>
-              <h3>Latest Tx Receipt</h3>
-              <p>{JSON.stringify(latestTxReceipt)}</p>
-            </Card.ResultBox>
-          )}
-        </Card.ContentList>
       </Card.ContentList>
-      {errorSendTx && (
-        <ErrorContent>
-          <p>{errorSendTx.name}</p>
-          <p>{errorSendTx.message}</p>
-        </ErrorContent>
-      )}
+      <Card.ContentList>
+        {(txResult || latestTxHash) && (
+          <Card.ResultBox>
+            <h3>Latest Tx Hash</h3>
+            <p>{txResult?.hash || latestTxHash}</p>
+          </Card.ResultBox>
+        )}
+        {latestTxReceipt && (
+          <Card.ResultBox>
+            <h3>Latest Tx Receipt</h3>
+            <p>{JSON.stringify(latestTxReceipt)}</p>
+          </Card.ResultBox>
+        )}
+        {errorSendTx && (
+          <ErrorContent>
+            <p>{errorSendTx.name}</p>
+            <p>{errorSendTx.message}</p>
+          </ErrorContent>
+        )}
+      </Card.ContentList>
     </Card.Section>
   );
 };

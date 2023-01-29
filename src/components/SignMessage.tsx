@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSignMessage } from 'wagmi';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';
@@ -34,13 +34,13 @@ const SignMessage = () => {
             <p>{signMessageData}</p>
           </Card.ResultBox>
         )}
+        {errorSignMessage && (
+          <ErrorContent>
+            <p>{errorSignMessage.name}</p>
+            <p>{errorSignMessage.message}</p>
+          </ErrorContent>
+        )}
       </Card.ContentList>
-      {errorSignMessage && (
-        <ErrorContent>
-          <p>{errorSignMessage.name}</p>
-          <p>{errorSignMessage.message}</p>
-        </ErrorContent>
-      )}
     </Card.Section>
   );
 };

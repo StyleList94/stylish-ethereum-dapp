@@ -1,4 +1,3 @@
-import React from 'react';
 import { Global } from '@emotion/react';
 import { configureChains, WagmiConfig, createClient } from 'wagmi';
 import {

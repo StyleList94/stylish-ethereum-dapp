@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
-import { Button } from '@mui/material';
+import Button from '@mui/material/Button';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';
