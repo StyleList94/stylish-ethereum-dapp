@@ -15,7 +15,7 @@ interface Store {
 export interface Klaytn {
   on: (
     eventName: string,
-    callback: (...args: [emitter: string & number]) => void | Promise<void>,
+    callback: (...args: [emitter: number & string]) => Promise<void> | void,
   ) => void;
   enable: () => Promise<Array<string>>;
   selectedAddress: string;

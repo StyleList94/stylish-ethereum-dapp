@@ -6,6 +6,6 @@ import type { IpcProvider } from 'caver-js';
 declare global {
   interface Window {
     ethereum: MetaMaskInpageProvider;
-    klaytn: Klaytn & IpcProvider;
+    klaytn: IpcProvider & Klaytn;
   }
 }

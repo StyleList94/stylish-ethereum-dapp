@@ -21,7 +21,7 @@ const KlaytnSendTransaction = () => {
   const [toInput, setToInput] = useState('');
   const [valueInput, setValueInput] = useState('');
 
-  const sendTxStatus = useMemo((): 'idle' | 'loading' | 'success' | 'error' => {
+  const sendTxStatus = useMemo((): 'error' | 'idle' | 'loading' | 'success' => {
     if (!isLoadingSendTx && !errorSendTx && !txReceipt) {
       return 'idle';
     }

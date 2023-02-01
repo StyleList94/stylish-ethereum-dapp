@@ -5,7 +5,7 @@ import type { Dispatch } from 'react';
 import type { Klaytn } from 'types/klaytn';
 
 type State = {
-  klaytn: (Klaytn & IpcProvider) | null;
+  klaytn: (IpcProvider & Klaytn) | null;
   account: string | null;
   balance: string | null;
   caver: Caver | null;
@@ -13,10 +13,6 @@ type State = {
 };
 
 type Action =
-  | {
-      type: 'SET_KLAYTN';
-      payload: (Klaytn & IpcProvider) | null;
-    }
   | {
       type: 'SET_ACCOUNT';
       payload: string | null;
@@ -32,6 +28,10 @@ type Action =
   | {
       type: 'SET_IS_CONNECTED';
       payload: boolean;
+    }
+  | {
+      type: 'SET_KLAYTN';
+      payload: (IpcProvider & Klaytn) | null;
     };
 
 type KlaytnDispatch = Dispatch<Action>;

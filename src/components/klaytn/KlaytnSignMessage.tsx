@@ -17,10 +17,10 @@ const KlaytnSignMessage = () => {
   const [signMessageData, setSignMessageData] = useState<string | null>(null);
 
   const signMessageStatus = useMemo(():
+    | 'error'
     | 'idle'
     | 'loading'
-    | 'success'
-    | 'error' => {
+    | 'success' => {
     if (!isLoadingSignMessage && !errorSignMessage && !signMessageData) {
       return 'idle';
     }
