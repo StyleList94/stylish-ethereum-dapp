@@ -75,6 +75,7 @@
         }
       }
     ],
+    "@typescript-eslint/no-unsafe-call": "off",
     "@typescript-eslint/return-await": "off",
     "@typescript-eslint/sort-type-union-intersection-members": "error"
   }
