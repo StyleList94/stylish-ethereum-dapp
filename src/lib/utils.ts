@@ -14,3 +14,6 @@ export const getElementToEmotionCssName = (
 
 export const shortenKaikasRpcErrorMessage = (message: string): string =>
   message.split('\n')[0];
+
+export const replacer = (key: string, value: unknown) =>
+  typeof value === 'bigint' ? value.toString() : value;

@@ -1,5 +1,6 @@
+import React from 'react';
 import { Global } from '@emotion/react';
-import { configureChains, WagmiConfig, createClient } from 'wagmi';
+import { configureChains, WagmiConfig, createConfig } from 'wagmi';
 import {
   mainnet,
   goerli,
@@ -22,16 +23,15 @@ import RouteProgress from '@/components/RouteProgress';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, publicClient, webSocketPublicClient } = configureChains(
   [mainnet, goerli, polygon, polygonMumbai, bsc, bscTestnet],
   [publicProvider()],
-  { targetQuorum: 1 },
 );
 
-const client = createClient({
+const config = createConfig({
   autoConnect: false,
-  provider,
-  webSocketProvider,
+  publicClient,
+  webSocketPublicClient,
   connectors: [
     new MetaMaskConnector({ chains }),
     new InjectedConnector({ chains }),
@@ -40,7 +40,7 @@ const client = createClient({
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => (
   <Provider store={store}>
-    <WagmiConfig client={client}>
+    <WagmiConfig config={config}>
       <KlaytnProvider>
         <RouteProgress />
         <Global styles={styles} />

@@ -5,7 +5,7 @@ import {
   useSendTransaction,
   useWaitForTransaction,
 } from 'wagmi';
-import { parseEther } from 'ethers/lib/utils';
+import { parseEther } from 'viem';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
@@ -15,6 +15,7 @@ import {
   removeAddressToPendingTxHash,
   setAddressToPendingTxHash,
 } from 'store/transaction';
+import { replacer } from 'lib/utils';
 
 import Card from '@/components/Card';
 import ErrorContent from '@/components/ErrorContent';
@@ -28,10 +29,9 @@ const SendTransaction = () => {
   const { address } = useAccount();
 
   const { config } = usePrepareSendTransaction({
-    request: {
-      to: toInput,
-      value: parseEther(valueInput || '0'),
-    },
+    to: toInput,
+    value: parseEther(`${+(valueInput || '0')}`),
+
     enabled: !!toInput && !!valueInput,
   });
 
@@ -141,7 +141,7 @@ const SendTransaction = () => {
         {latestTxReceipt && (
           <Card.ResultBox>
             <h3>Latest Tx Receipt</h3>
-            <p>{JSON.stringify(latestTxReceipt)}</p>
+            <p>{JSON.stringify(latestTxReceipt, replacer)}</p>
           </Card.ResultBox>
         )}
         {errorSendTx && (
