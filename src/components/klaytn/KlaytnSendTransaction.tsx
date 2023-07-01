@@ -56,7 +56,7 @@ const KlaytnSendTransaction = () => {
         type: 'VALUE_TRANSFER',
         from: account,
         to: toInput,
-        value: caver.utils.toPeb(valueInput, 'KLAY'),
+        value: caver.utils.toPeb(valueInput, 'KLAY') as number | string,
         gas: 25000,
       });
 
