@@ -1,5 +1,3 @@
-/* eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access */
-import { css, Global } from '@emotion/react';
 import Router from 'next/router';
 import NProgress from 'nprogress';
 
@@ -9,15 +7,6 @@ NProgress.configure({
   showSpinner: false,
   trickleSpeed: 200,
 });
-
-const progressStyle = css`
-  #nprogress .bar {
-    height: 3px;
-  }
-
-  #nprogress .peg {
-  }
-`;
 
 const startProgress = () => {
   NProgress.start();
@@ -31,6 +20,6 @@ Router.events.on('routeChangeStart', startProgress);
 Router.events.on('routeChangeComplete', doneProgress);
 Router.events.on('routeChangeError', doneProgress);
 
-const RouteProgress = () => <Global styles={progressStyle} />;
+const RouteProgress = () => <div />;
 
 export default RouteProgress;

@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNetwork, useSwitchNetwork } from 'wagmi';
-import Button from '@mui/material/Button';
 
-import Card from '@/components/Card';
-import ErrorContent from '@/components/ErrorContent';
+import Card from '@/components/card';
+import ErrorContent from '@/components/error-content';
 
 const Network = () => {
   const { chain } = useNetwork();
@@ -20,28 +19,30 @@ const Network = () => {
       <Card.Title>Network</Card.Title>
       <Card.ContentList>
         <Card.ContentItem>
-          <h3>Chain Id</h3>
-          <p>{chain?.id}</p>
+          <Card.ItemTitle>Chain Id</Card.ItemTitle>
+          <Card.ItemValue>{chain?.id}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
-          <h3>Name</h3>
-          <p>{chain?.name}</p>
+          <Card.ItemTitle>Name</Card.ItemTitle>
+          <Card.ItemValue>{chain?.name}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
-          <h3>Switch Network Status</h3>
-          <p>{switchNetworkStatus}</p>
+          <Card.ItemTitle>Switch Network Status</Card.ItemTitle>
+          <Card.ItemValue>{switchNetworkStatus}</Card.ItemValue>
         </Card.ContentItem>
       </Card.ContentList>
       <Card.ContentItem>
         <h3>Switch To</h3>
         <Card.ActionGroup>
           {chains.map((chainItem) => (
-            <Button
+            <button
+              type="button"
+              className="btn"
               key={`${chainItem.id}-${chainItem.name}`}
               onClick={() => switchNetwork?.(chainItem.id)}
             >
               {chainItem.name}
-            </Button>
+            </button>
           ))}
         </Card.ActionGroup>
       </Card.ContentItem>

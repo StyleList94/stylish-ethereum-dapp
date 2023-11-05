@@ -6,8 +6,6 @@ import {
   useWaitForTransaction,
 } from 'wagmi';
 import { parseEther } from 'viem';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import {
@@ -17,8 +15,8 @@ import {
 } from 'store/transaction';
 import { replacer } from 'lib/utils';
 
-import Card from '@/components/Card';
-import ErrorContent from '@/components/ErrorContent';
+import Card from '@/components/card';
+import ErrorContent from '@/components/error-content';
 
 const SendTransaction = () => {
   const dispatch = useAppDispatch();
@@ -91,57 +89,75 @@ const SendTransaction = () => {
       <Card.Title>Transaction Test</Card.Title>
       <Card.ContentList>
         <Card.ContentItem>
-          <h3>Send Tx Status</h3>
-          <p>{sendTxStatus}</p>
+          <Card.ItemTitle>Send Tx Status</Card.ItemTitle>
+          <Card.ItemValue>{sendTxStatus}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
-          <h3>Wait Tx Status</h3>
-          <p>{waitTxStatus}</p>
+          <Card.ItemTitle>Wait Tx Status</Card.ItemTitle>
+          <Card.ItemValue>{waitTxStatus}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
-          <h3>Pending Tx Count</h3>
-          <p>{pendingTxCount}</p>
+          <Card.ItemTitle>Pending Tx Count</Card.ItemTitle>
+          <Card.ItemValue>{pendingTxCount}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
-          <h3>Send</h3>
+          <Card.ItemTitle>Send</Card.ItemTitle>
           <Card.ActionGroup>
-            <TextField
-              id="tx-to"
-              label="To"
-              name="to"
-              type="text"
-              variant="standard"
-              onChange={(e) => setToInput(e.target.value)}
-            />
-            <TextField
-              id="tx-ether"
-              label="Ether"
-              name="ether"
-              type="text"
-              variant="standard"
-              onChange={(e) => setValueInput(e.target.value)}
-            />
-            <Button
+            <div className="form-control w-full max-w-xs">
+              <label htmlFor="tx-to" className="label">
+                <span className="label-text">To</span>
+              </label>
+              <input
+                id="tx-to"
+                type="text"
+                placeholder="Address"
+                className="input input-ghost input-sm w-full max-w-xs"
+                onChange={(e) => setToInput(e.target.value)}
+                value={toInput}
+              />
+            </div>
+
+            <div className="form-control w-full max-w-xs">
+              <label htmlFor="tx-ether" className="label">
+                <span className="label-text">Ether</span>
+              </label>
+              <input
+                id="tx-ether"
+                type="text"
+                placeholder="ETH"
+                className="input input-ghost input-sm w-full max-w-xs"
+                onChange={(e) => setValueInput(e.target.value)}
+                value={valueInput}
+              />
+            </div>
+
+            <button
+              type="button"
+              className="btn"
               onClick={() => {
                 sendTransaction?.();
               }}
             >
               Send Ether
-            </Button>
+            </button>
           </Card.ActionGroup>
         </Card.ContentItem>
       </Card.ContentList>
       <Card.ContentList>
         {(txResult || latestTxHash) && (
           <Card.ResultBox>
-            <h3>Latest Tx Hash</h3>
-            <p>{txResult?.hash || latestTxHash}</p>
+            <Card.ItemTitle>Latest Tx Hash</Card.ItemTitle>
+            <Card.ResultValue>
+              {txResult?.hash || latestTxHash}
+            </Card.ResultValue>
           </Card.ResultBox>
         )}
         {latestTxReceipt && (
           <Card.ResultBox>
-            <h3>Latest Tx Receipt</h3>
-            <p>{JSON.stringify(latestTxReceipt, replacer)}</p>
+            <Card.ItemTitle>Latest Tx Receipt</Card.ItemTitle>
+            <Card.ResultValue>
+              {JSON.stringify(latestTxReceipt, replacer)}
+            </Card.ResultValue>
           </Card.ResultBox>
         )}
         {errorSendTx && (

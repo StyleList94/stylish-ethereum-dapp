@@ -1,9 +1,8 @@
 import React from 'react';
 import { useSignMessage } from 'wagmi';
-import Button from '@mui/material/Button';
 
-import Card from '@/components/Card';
-import ErrorContent from '@/components/ErrorContent';
+import Card from '@/components/card';
+import ErrorContent from '@/components/error-content';
 
 const SignMessage = () => {
   const {
@@ -18,20 +17,24 @@ const SignMessage = () => {
       <Card.Title>Sign Message Test</Card.Title>
       <Card.ContentList>
         <Card.ContentItem>
-          <h3>Status</h3>
-          <p>{signMessageStatus}</p>
+          <Card.ItemTitle>Status</Card.ItemTitle>
+          <Card.ItemValue>{signMessageStatus}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ActionGroup>
-          <Button onClick={() => signMessage({ message: 'hello world!' })}>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => signMessage({ message: 'hello world!' })}
+          >
             Sign Message
-          </Button>
+          </button>
         </Card.ActionGroup>
       </Card.ContentList>
       <Card.ContentList>
         {signMessageData && (
           <Card.ResultBox>
-            <h3>Result</h3>
-            <p>{signMessageData}</p>
+            <Card.ItemTitle>Result</Card.ItemTitle>
+            <Card.ResultValue>{signMessageData}</Card.ResultValue>
           </Card.ResultBox>
         )}
         {errorSignMessage && (

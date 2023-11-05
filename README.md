@@ -6,7 +6,8 @@ create stylish ethereum dapp
 
 - wagmi
 - Redux Toolkit
-- Emotion
+- tailwindcss
+- daisyUI
 - Jest and React Testing Library
 - ESLint
 - Prettier

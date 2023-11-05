@@ -1,0 +1,23 @@
+@import 'normalize.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+&::-webkit-scrollbar {
+    background-color: #fff;
+    height: 8px;
+}
+
+&::-webkit-scrollbar-thumb {
+    background-color: rgba(206, 212, 218, 0.5);
+    border-radius: 24px;
+}
+
+
+#nprogress .bar {
+    height: 3px;
+}
+
+#nprogress .peg {
+}
