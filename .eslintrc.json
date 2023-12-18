@@ -20,7 +20,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "ignorePatterns": ["*.config.js", "jest.setup.js"],
+  "ignorePatterns": ["*.config.js", "*.config.ts", "jest.setup.js"],
   "plugins": ["@typescript-eslint", "testing-library"],
   "extends": [
     "eslint:recommended",
@@ -60,6 +60,17 @@
         "treatUndefinedAsUnspecified": false
       }
     ],
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": [
+          "**/*.test.?(ts|tsx)",
+          "**/*.spec.?(ts|tsx)",
+          "**/test-utils.tsx",
+          "**/jest.setup.ts"
+        ]
+      }
+    ],
     "jsx-a11y/label-has-associated-control": [
       2,
       {
@@ -89,6 +100,10 @@
     ],
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "react/require-default-props": [
+      "error",
+      { "ignoreFunctionalComponents": true }
+    ]
   }
 }
