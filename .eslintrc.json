@@ -46,6 +46,7 @@
   "rules": {
     "@typescript-eslint/explicit-module-boundary-types": "off",
     "@typescript-eslint/no-empty-interface": "off",
+    "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",
       {
@@ -81,21 +82,30 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$"]
+        "ignorePropertyModificationsForRegex": [
+          "^state$",
+          "^ctx$"
+        ]
       }
     ],
     "react-hooks/rules-of-hooks": "error",
     "react/function-component-definition": [
       2,
       {
-        "namedComponents": ["arrow-function", "function-declaration"],
+        "namedComponents": [
+          "arrow-function",
+          "function-declaration"
+        ],
         "unnamedComponents": "arrow-function"
       }
     ],
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".ts", ".tsx"]
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
       }
     ],
     "react/jsx-props-no-spreading": "off",
@@ -103,7 +113,9 @@
     "react/react-in-jsx-scope": "off",
     "react/require-default-props": [
       "error",
-      { "ignoreFunctionalComponents": true }
+      {
+        "ignoreFunctionalComponents": true
+      }
     ]
   }
 }

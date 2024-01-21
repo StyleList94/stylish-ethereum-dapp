@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
   useAccount,
-  usePrepareSendTransaction,
+  useBalance,
+  useBlockNumber,
+  useEstimateGas,
   useSendTransaction,
-  useWaitForTransaction,
+  useWaitForTransactionReceipt,
 } from 'wagmi';
-import { parseEther } from 'viem';
+import { formatEther, parseEther } from 'viem';
 
 import { useAppDispatch, useAppSelector } from 'store/hooks';
 import {
@@ -17,33 +19,43 @@ import { replacer } from 'lib/utils';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SendTransaction = () => {
   const dispatch = useAppDispatch();
+  const queryClient = useQueryClient();
 
   const [toInput, setToInput] = useState('');
   const [valueInput, setValueInput] = useState('');
 
-  const { address } = useAccount();
+  const { data: blockNumber } = useBlockNumber({ watch: true });
 
-  const { config } = usePrepareSendTransaction({
-    to: toInput,
+  const { address, chain } = useAccount();
+
+  const { data: balance, queryKey } = useBalance({
+    address,
+  });
+
+  const { data: gas } = useEstimateGas({
+    to: toInput as `0x${string}`,
     value: parseEther(`${+(valueInput || '0')}`),
-
-    enabled: !!toInput && !!valueInput,
+    query: {
+      enabled: !!toInput && !!valueInput,
+    },
   });
 
   const {
     sendTransaction,
     status: sendTxStatus,
-    data: txResult,
+    data: txHash,
     error: errorSendTx,
   } = useSendTransaction({
-    ...config,
-    onSuccess(data) {
-      if (address) {
-        dispatch(setAddressToPendingTxHash({ txHash: data.hash, address }));
-      }
+    mutation: {
+      onSuccess(hash) {
+        if (address) {
+          dispatch(setAddressToPendingTxHash({ txHash: hash, address }));
+        }
+      },
     },
   });
 
@@ -60,13 +72,17 @@ const SendTransaction = () => {
     [pendingTxHashQueue],
   );
 
-  const { status: waitTxStatus } = useWaitForTransaction({
+  const { status: waitTxStatus } = useWaitForTransactionReceipt({
     hash: pendingTxHash ?? undefined,
   });
 
-  const { data: latestTxReceipt } = useWaitForTransaction({
+  const { data: latestTxReceipt } = useWaitForTransactionReceipt({
     hash: latestTxHash ?? undefined,
   });
+
+  useEffect(() => {
+    queryClient.invalidateQueries({ queryKey });
+  }, [blockNumber, queryClient, queryKey]);
 
   useEffect(() => {
     if (
@@ -88,6 +104,15 @@ const SendTransaction = () => {
     <Card.Section>
       <Card.Title>Transaction Test</Card.Title>
       <Card.ContentList>
+        <Card.ContentItem>
+          <Card.ItemTitle>Balance</Card.ItemTitle>
+          <Card.ItemValue>
+            <p className="text-base">
+              {formatEther(balance?.value || 0n)}{' '}
+              {chain?.nativeCurrency.symbol.toUpperCase() || 'ETH'}
+            </p>
+          </Card.ItemValue>
+        </Card.ContentItem>
         <Card.ContentItem>
           <Card.ItemTitle>Send Tx Status</Card.ItemTitle>
           <Card.ItemValue>{sendTxStatus}</Card.ItemValue>
@@ -135,7 +160,11 @@ const SendTransaction = () => {
               type="button"
               className="btn"
               onClick={() => {
-                sendTransaction?.();
+                sendTransaction?.({
+                  to: toInput as `0x${string}`,
+                  value: parseEther(`${+(valueInput || '0')}`),
+                  gas,
+                });
               }}
             >
               Send Ether
@@ -144,12 +173,10 @@ const SendTransaction = () => {
         </Card.ContentItem>
       </Card.ContentList>
       <Card.ContentList>
-        {(txResult || latestTxHash) && (
+        {(txHash || latestTxHash) && (
           <Card.ResultBox>
             <Card.ItemTitle>Latest Tx Hash</Card.ItemTitle>
-            <Card.ResultValue>
-              {txResult?.hash || latestTxHash}
-            </Card.ResultValue>
+            <Card.ResultValue>{txHash || latestTxHash}</Card.ResultValue>
           </Card.ResultBox>
         )}
         {latestTxReceipt && (

@@ -1,18 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
-import { configureChains, WagmiConfig, createConfig } from 'wagmi';
-import {
-  mainnet,
-  goerli,
-  polygon,
-  polygonMumbai,
-  bsc,
-  bscTestnet,
-} from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/public';
-import { InjectedConnector } from 'wagmi/connectors/injected';
-import { MetaMaskConnector } from 'wagmi/connectors/metaMask';
+import { type ReactNode, useState } from 'react';
+import { WagmiProvider, createConfig, http } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { injected } from 'wagmi/connectors';
 import { ToastContainer } from 'react-toastify';
 import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -24,22 +15,16 @@ import RouteProgress from '@/components/route-progress';
 
 import 'react-toastify/dist/ReactToastify.css';
 
-const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [mainnet, goerli, polygon, polygonMumbai, bsc, bscTestnet],
-  [publicProvider()],
-);
-
 const config = createConfig({
-  autoConnect: false,
-  publicClient,
-  webSocketPublicClient,
-  connectors: [
-    new MetaMaskConnector({ chains }),
-    new InjectedConnector({ chains }),
-  ],
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+  connectors: [injected({ target: 'metaMask' })],
 });
 
-const Providers = ({ children }: { children: React.ReactNode }) => {
+const Providers = ({ children }: { children: ReactNode }) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -55,11 +40,11 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration>
-          <WagmiConfig config={config}>
+          <WagmiProvider config={config}>
             <RouteProgress />
             {children}
             <ToastContainer />
-          </WagmiConfig>
+          </WagmiProvider>
         </ReactQueryStreamedHydration>
       </QueryClientProvider>
     </Provider>

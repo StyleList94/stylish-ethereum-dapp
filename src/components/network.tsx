@@ -1,18 +1,18 @@
 import React from 'react';
-import { useNetwork, useSwitchNetwork } from 'wagmi';
+import { useAccount, useSwitchChain } from 'wagmi';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';
 
 const Network = () => {
-  const { chain } = useNetwork();
+  const { chain } = useAccount();
 
   const {
-    switchNetwork,
+    switchChain,
     chains,
     status: switchNetworkStatus,
     error: errorSwitch,
-  } = useSwitchNetwork();
+  } = useSwitchChain();
 
   return (
     <Card.Section>
@@ -20,11 +20,11 @@ const Network = () => {
       <Card.ContentList>
         <Card.ContentItem>
           <Card.ItemTitle>Chain Id</Card.ItemTitle>
-          <Card.ItemValue>{chain?.id}</Card.ItemValue>
+          <Card.ItemValue>{chain?.id || 'Not supported'}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
           <Card.ItemTitle>Name</Card.ItemTitle>
-          <Card.ItemValue>{chain?.name}</Card.ItemValue>
+          <Card.ItemValue>{chain?.name || 'Not supported'}</Card.ItemValue>
         </Card.ContentItem>
         <Card.ContentItem>
           <Card.ItemTitle>Switch Network Status</Card.ItemTitle>
@@ -39,7 +39,7 @@ const Network = () => {
               type="button"
               className="btn"
               key={`${chainItem.id}-${chainItem.name}`}
-              onClick={() => switchNetwork?.(chainItem.id)}
+              onClick={() => switchChain?.({ chainId: chainItem.id })}
             >
               {chainItem.name}
             </button>

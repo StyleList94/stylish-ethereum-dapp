@@ -16,9 +16,8 @@ const Account = () => {
   const {
     connect,
     connectors,
-    isLoading: isConnecting,
+    isPending: isConnecting,
     error: errorConnect,
-    pendingConnector,
   } = useConnect();
 
   const { disconnect } = useDisconnect();
@@ -58,14 +57,12 @@ const Account = () => {
                   className="btn"
                   key={`connector-${connector.id}`}
                   onClick={() => connect({ connector })}
-                  disabled={
-                    isConnecting && pendingConnector?.id === connector.id
-                  }
+                  disabled={isConnecting}
                 >
-                  {connector.id}({connector.name})
-                  {isConnecting && pendingConnector?.id === connector.id && (
+                  {isConnecting && (
                     <span className="loading loading-spinner loading-md" />
-                  )}
+                  )}{' '}
+                  {connector.id}
                 </button>
               ))}
             {isConnected && (
