@@ -8,7 +8,7 @@ create stylish ethereum dapp
 - Redux Toolkit
 - tailwindcss
 - daisyUI
-- Jest and React Testing Library
+- Unit Testing
 - ESLint
 - Prettier
 - Module path aliases

@@ -3,8 +3,7 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true,
-    "jest": true
+    "node": true
   },
   "settings": {
     "react": {
@@ -20,7 +19,7 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "ignorePatterns": ["*.config.js", "*.config.ts", "jest.setup.js"],
+  "ignorePatterns": ["*.config.js", "*.config.ts"],
   "plugins": ["@typescript-eslint", "testing-library"],
   "extends": [
     "eslint:recommended",
@@ -39,7 +38,7 @@
         "**/__tests__/**/*.[jt]s?(x)",
         "**/?(*.)+(spec|test).[jt]s?(x)"
       ],
-      "extends": ["plugin:vitest/recommended","plugin:testing-library/react"]
+      "extends": ["plugin:vitest/recommended", "plugin:testing-library/react"]
     }
   ],
   "rules": {
@@ -80,30 +79,21 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsForRegex": [
-          "^state$",
-          "^ctx$"
-        ]
+        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$"]
       }
     ],
     "react-hooks/rules-of-hooks": "error",
     "react/function-component-definition": [
       2,
       {
-        "namedComponents": [
-          "arrow-function",
-          "function-declaration"
-        ],
+        "namedComponents": ["arrow-function", "function-declaration"],
         "unnamedComponents": "arrow-function"
       }
     ],
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [
-          ".ts",
-          ".tsx"
-        ]
+        "extensions": [".ts", ".tsx"]
       }
     ],
     "react/jsx-props-no-spreading": "off",
