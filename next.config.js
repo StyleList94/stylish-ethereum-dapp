@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   swcMinify: true,
-  webpack: (config) => {
+  webpack: (config, context) => {
     config.module.rules.push({
       test: /\.svg$/i,
       issuer: /\.[jt]sx?$/,
@@ -10,6 +10,12 @@ const nextConfig = {
     });
 
     config.resolve.fallback = { fs: false };
+
+    config.plugins.push(
+      new context.webpack.IgnorePlugin({
+        resourceRegExp: /^(pino-pretty|encoding)$/,
+      }),
+    );
 
     return config;
   },
