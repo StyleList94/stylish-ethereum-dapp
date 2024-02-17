@@ -2,7 +2,7 @@
 
 import { useAccount } from 'wagmi';
 
-import useMounted from 'hooks/useMounted';
+import useMounted from 'hooks/use-mounted';
 
 import Account from '@/components/account';
 import Network from '@/components/network';
