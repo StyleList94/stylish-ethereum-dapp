@@ -14,9 +14,11 @@ import { store } from 'store';
 import RouteProgress from '@/components/route-progress';
 
 import 'react-toastify/dist/ReactToastify.css';
+import Updater from '@/components/updater';
 
 const config = createConfig({
   chains: [mainnet, sepolia],
+  ssr: true,
   transports: {
     [mainnet.id]: http(),
     [sepolia.id]: http(),
@@ -44,6 +46,7 @@ const Providers = ({ children }: { children: ReactNode }) => {
             <RouteProgress />
             {children}
             <ToastContainer />
+            <Updater />
           </WagmiProvider>
         </ReactQueryStreamedHydration>
       </QueryClientProvider>

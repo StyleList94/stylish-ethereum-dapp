@@ -1,28 +1,23 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useAccount,
   useBalance,
   useBlockNumber,
   useEstimateGas,
-  useSendTransaction,
   useWaitForTransactionReceipt,
 } from 'wagmi';
 import { formatEther, parseEther } from 'viem';
 
-import { useAppDispatch, useAppSelector } from 'store/hooks';
-import {
-  findPendingTxHash,
-  removeAddressToPendingTxHash,
-  setAddressToPendingTxHash,
-} from 'store/transaction';
+import { useAppSelector } from 'store/hooks';
 import { replacer } from 'lib/utils';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';
 import { useQueryClient } from '@tanstack/react-query';
+import useSendTransaction from 'hooks/use-send-transaction';
+import usePendingTransaction from 'hooks/use-pending-transaction';
 
 const SendTransaction = () => {
-  const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
   const [toInput, setToInput] = useState('');
@@ -49,56 +44,23 @@ const SendTransaction = () => {
     status: sendTxStatus,
     data: txHash,
     error: errorSendTx,
-  } = useSendTransaction({
-    mutation: {
-      onSuccess(hash) {
-        if (address) {
-          dispatch(setAddressToPendingTxHash({ txHash: hash, address }));
-        }
-      },
-    },
-  });
+  } = useSendTransaction();
 
-  const { pendingTxHash, latestTxHash, pendingTxHashQueue } = useAppSelector(
-    ({ transaction }) => ({
-      pendingTxHash: transaction.pendingTxHash,
-      latestTxHash: transaction.latestTxHash,
-      pendingTxHashQueue: transaction.pendingTxHashQueue,
-    }),
-  );
+  const { pendingTxHash, latestTxHash } = useAppSelector(({ transaction }) => ({
+    pendingTxHash: transaction.pendingTxHash,
+    latestTxHash: transaction.latestTxHash,
+    pendingTxHashQueue: transaction.pendingTxHashQueue,
+  }));
 
-  const pendingTxCount = useMemo(
-    () => pendingTxHashQueue.length,
-    [pendingTxHashQueue],
-  );
+  const { pendingTxCount, latestTxReceipt } = usePendingTransaction();
 
   const { status: waitTxStatus } = useWaitForTransactionReceipt({
     hash: pendingTxHash ?? undefined,
   });
 
-  const { data: latestTxReceipt } = useWaitForTransactionReceipt({
-    hash: latestTxHash ?? undefined,
-  });
-
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey });
   }, [blockNumber, queryClient, queryKey]);
-
-  useEffect(() => {
-    if (
-      pendingTxHash &&
-      address &&
-      (waitTxStatus === 'success' || waitTxStatus === 'error')
-    ) {
-      dispatch(removeAddressToPendingTxHash({ address }));
-    }
-  }, [dispatch, waitTxStatus, pendingTxHash, address]);
-
-  useEffect(() => {
-    if (address) {
-      dispatch(findPendingTxHash({ address }));
-    }
-  }, [dispatch, address]);
 
   return (
     <Card.Section>
