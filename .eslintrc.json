@@ -79,21 +79,31 @@
       "error",
       {
         "props": true,
-        "ignorePropertyModificationsForRegex": ["^state$", "^ctx$"]
+        "ignorePropertyModificationsForRegex": [
+          "^state$",
+          "^ctx$"
+        ]
       }
     ],
     "react-hooks/rules-of-hooks": "error",
+    "react/display-name": "off",
     "react/function-component-definition": [
       2,
       {
-        "namedComponents": ["arrow-function", "function-declaration"],
+        "namedComponents": [
+          "arrow-function",
+          "function-declaration"
+        ],
         "unnamedComponents": "arrow-function"
       }
     ],
     "react/jsx-filename-extension": [
       1,
       {
-        "extensions": [".ts", ".tsx"]
+        "extensions": [
+          ".ts",
+          ".tsx"
+        ]
       }
     ],
     "react/jsx-props-no-spreading": "off",
