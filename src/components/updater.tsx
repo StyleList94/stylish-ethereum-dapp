@@ -12,11 +12,9 @@ const Updater = () => {
 
   const { address } = useAccount();
 
-  const { pendingTxHash } = useAppSelector(({ transaction }) => ({
-    pendingTxHash: transaction.pendingTxHash,
-    latestTxHash: transaction.latestTxHash,
-    pendingTxHashQueue: transaction.pendingTxHashQueue,
-  }));
+  const pendingTxHash = useAppSelector(
+    ({ transaction }) => transaction.pendingTxHash,
+  );
 
   const { status: waitTxStatus } = useWaitForTransactionReceipt({
     hash: pendingTxHash ?? undefined,

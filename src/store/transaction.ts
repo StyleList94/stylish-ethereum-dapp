@@ -35,7 +35,7 @@ const initialState: State = {
   pendingTxHashQueue: [],
 };
 
-export const transactionSlice = createSlice({
+const transactionSlice = createSlice({
   name: 'transaction',
   initialState,
   reducers: {

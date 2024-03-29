@@ -10,7 +10,7 @@ const initialState: State = {
   prev: '/',
 };
 
-export const pageSlice = createSlice({
+const pageSlice = createSlice({
   name: 'page',
   initialState,
   reducers: {

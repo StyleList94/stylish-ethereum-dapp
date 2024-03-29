@@ -4,12 +4,12 @@ import { useWaitForTransactionReceipt } from 'wagmi';
 import { useAppSelector } from 'store/hooks';
 
 export default function usePendingTransaction() {
-  const { latestTxHash, pendingTxHashQueue } = useAppSelector(
-    ({ transaction }) => ({
-      pendingTxHash: transaction.pendingTxHash,
-      latestTxHash: transaction.latestTxHash,
-      pendingTxHashQueue: transaction.pendingTxHashQueue,
-    }),
+  const latestTxHash = useAppSelector(
+    ({ transaction }) => transaction.latestTxHash,
+  );
+
+  const pendingTxHashQueue = useAppSelector(
+    ({ transaction }) => transaction.pendingTxHashQueue,
   );
 
   const pendingTxCount = useMemo(

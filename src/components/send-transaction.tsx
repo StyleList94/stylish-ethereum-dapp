@@ -7,15 +7,15 @@ import {
   useWaitForTransactionReceipt,
 } from 'wagmi';
 import { formatEther, parseEther } from 'viem';
+import { useQueryClient } from '@tanstack/react-query';
 
+import useSendTransaction from 'hooks/use-send-transaction';
+import usePendingTransaction from 'hooks/use-pending-transaction';
 import { useAppSelector } from 'store/hooks';
 import { replacer } from 'lib/utils';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';
-import { useQueryClient } from '@tanstack/react-query';
-import useSendTransaction from 'hooks/use-send-transaction';
-import usePendingTransaction from 'hooks/use-pending-transaction';
 
 const SendTransaction = () => {
   const queryClient = useQueryClient();
@@ -46,16 +46,18 @@ const SendTransaction = () => {
     error: errorSendTx,
   } = useSendTransaction();
 
-  const { pendingTxHash, latestTxHash } = useAppSelector(({ transaction }) => ({
-    pendingTxHash: transaction.pendingTxHash,
-    latestTxHash: transaction.latestTxHash,
-    pendingTxHashQueue: transaction.pendingTxHashQueue,
-  }));
+  const pendingTxHash = useAppSelector(
+    ({ transaction }) => transaction.pendingTxHash,
+  );
+
+  const latestTxHash = useAppSelector(
+    ({ transaction }) => transaction.latestTxHash,
+  );
 
   const { pendingTxCount, latestTxReceipt } = usePendingTransaction();
 
   const { status: waitTxStatus } = useWaitForTransactionReceipt({
-    hash: pendingTxHash ?? undefined,
+    hash: pendingTxHash ?? latestTxHash ?? undefined,
   });
 
   useEffect(() => {

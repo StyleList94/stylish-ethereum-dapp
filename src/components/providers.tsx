@@ -1,6 +1,6 @@
 'use client';
 
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, useRef, useState } from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
@@ -9,7 +9,7 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
-import { store } from 'store';
+import { makeStore, AppStore } from 'store';
 
 import RouteProgress from '@/components/route-progress';
 
@@ -38,8 +38,14 @@ const Providers = ({ children }: { children: ReactNode }) => {
       }),
   );
 
+  const storeRef = useRef<AppStore>();
+  if (!storeRef.current) {
+    // Create the store instance the first time this renders
+    storeRef.current = makeStore();
+  }
+
   return (
-    <Provider store={store}>
+    <Provider store={storeRef.current}>
       <QueryClientProvider client={queryClient}>
         <ReactQueryStreamedHydration>
           <WagmiProvider config={config}>
