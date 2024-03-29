@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import differenceInMilliseconds from 'date-fns/differenceInMilliseconds';
-import secondsToMinutes from 'date-fns/secondsToMinutes';
-import secondsToHours from 'date-fns/secondsToHours';
+import { differenceInMilliseconds } from 'date-fns/differenceInMilliseconds';
+import { secondsToMinutes } from 'date-fns/secondsToMinutes';
+import { secondsToHours } from 'date-fns/secondsToHours';
 
 type StartTime = {
   hour: number;
   min: number;
   sec: number;
 };
-export const useTimer = (launch: string) => {
+export const useTimer = (launch: string): [StartTime | null, boolean] => {
   const [startTime, setStartTime] = useState<StartTime | null>(null);
   const [isTimerDone, setIsTimerDone] = useState(false);
   const isMount = useRef(false);
