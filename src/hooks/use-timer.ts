@@ -8,36 +8,42 @@ type StartTime = {
   min: number;
   sec: number;
 };
-export const useTimer = (launch: string): [StartTime | null, boolean] => {
+
+type UstTimerParameter = {
+  launch: string;
+  interval?: number;
+};
+
+export const useTimer = ({
+  launch,
+  interval = 1000,
+}: UstTimerParameter): [StartTime | null, boolean] => {
   const [startTime, setStartTime] = useState<StartTime | null>(null);
   const [isTimerDone, setIsTimerDone] = useState(false);
   const isMount = useRef(false);
   const count = useRef<number | null>(null);
   const countdown = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const getServerTime = useCallback(() => {
-    const xmlHttp = new XMLHttpRequest();
-
-    xmlHttp.open('HEAD', window.location.href.toString(), false);
-    xmlHttp.setRequestHeader('Content-Type', 'text/html');
-    xmlHttp.send('');
-    return xmlHttp.getResponseHeader('Date');
+  const getServerTime = useCallback(async () => {
+    const res = await fetch('/api/time');
+    return (await res.json()) as unknown as { serverTime: string };
   }, []);
 
-  const getCountdownMillisecond = useCallback(() => {
-    const date = new Date(getServerTime() ?? Date.now());
+  const getCountdownMillisecond = useCallback(async () => {
+    const { serverTime } = await getServerTime();
+    const date = new Date(serverTime);
     return differenceInMilliseconds(
-      new Date((launch || getServerTime()) ?? Date.now()),
+      new Date((launch || serverTime) ?? Date.now()),
       date,
     );
   }, [launch, getServerTime]);
 
-  const countdownInterval = useCallback(() => {
+  const countdownInterval = useCallback(async () => {
     if (count.current === null || !isMount.current) {
-      count.current = getCountdownMillisecond();
+      count.current = await getCountdownMillisecond();
       isMount.current = true;
     }
-    count.current -= 10;
+    count.current -= interval;
     const countSec = parseInt(String(count.current / 1000), 10);
 
     setStartTime({
@@ -45,7 +51,7 @@ export const useTimer = (launch: string): [StartTime | null, boolean] => {
       min: secondsToMinutes(countSec) % 60,
       sec: countSec % 60,
     });
-  }, [getCountdownMillisecond]);
+  }, [getCountdownMillisecond, interval]);
 
   const handleVisibilityChange = useCallback(() => {
     if (document.hidden) {
@@ -57,30 +63,32 @@ export const useTimer = (launch: string): [StartTime | null, boolean] => {
 
       isMount.current = false;
     } else if (!countdown.current) {
-      countdown.current = setInterval(countdownInterval, 10);
+      countdown.current = setInterval(countdownInterval, interval);
     }
-  }, [countdownInterval]);
+  }, [countdownInterval, interval]);
 
   useEffect(() => {
-    const countMs = getCountdownMillisecond();
-    const diffSec = parseInt(String(countMs / 1000), 10);
+    (async () => {
+      const countMs = await getCountdownMillisecond();
+      const diffSec = parseInt(String(countMs / 1000), 10);
 
-    const hour = secondsToHours(diffSec);
-    const min = secondsToMinutes(diffSec) % 60;
-    const sec = diffSec % 60;
+      const hour = secondsToHours(diffSec);
+      const min = secondsToMinutes(diffSec) % 60;
+      const sec = diffSec % 60;
 
-    setStartTime({
-      hour,
-      min,
-      sec,
-    });
+      setStartTime({
+        hour,
+        min,
+        sec,
+      });
 
-    count.current = countMs;
-    isMount.current = true;
+      count.current = countMs;
+      isMount.current = true;
+    })();
   }, [getCountdownMillisecond]);
 
   useEffect(() => {
-    countdown.current = setInterval(countdownInterval, 10);
+    countdown.current = setInterval(countdownInterval, interval);
 
     return () => {
       if (countdown.current) {
@@ -88,7 +96,7 @@ export const useTimer = (launch: string): [StartTime | null, boolean] => {
       }
       isMount.current = false;
     };
-  }, [countdownInterval]);
+  }, [countdownInterval, interval]);
 
   useEffect(() => {
     document.addEventListener('visibilitychange', handleVisibilityChange);
