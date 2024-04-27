@@ -1,8 +1,28 @@
-import React, { ReactElement, useState } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { type ReactElement, type ReactNode, useState } from 'react';
+import { render, type RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createConfig, http, WagmiProvider } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { mock } from 'wagmi/connectors';
 
-const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
+export const config = createConfig({
+  chains: [mainnet, sepolia],
+  connectors: [
+    mock({
+      accounts: [
+        '0x29072219f93D6893F9201Adfc31246169e785252',
+        '0xa2c5189F10181B90b51A4CE509865100d64A0be0',
+      ],
+    }),
+  ],
+
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+});
+
+const AllTheProviders = ({ children }: { children: ReactNode }) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -15,7 +35,11 @@ const AllTheProviders = ({ children }: { children: React.ReactNode }) => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <WagmiProvider config={config} reconnectOnMount={false}>
+        {children}
+      </WagmiProvider>
+    </QueryClientProvider>
   );
 };
 

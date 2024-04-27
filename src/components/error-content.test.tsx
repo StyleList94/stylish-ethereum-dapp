@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 
 import ErrorContent from '@/components/error-content';
 
-import { render, screen } from '../lib/test-utils';
+import { render, screen } from 'lib/test-utils';
 
 describe('<ErrorContent />', () => {
   it('should be render', () => {
