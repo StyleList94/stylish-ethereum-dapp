@@ -52,7 +52,7 @@ describe('<Card />', () => {
 
     const element = screen.getByText(/Card Item Value/);
     expect(element.tagName).toMatch(/p/i);
-    expect(element).toHaveClass("overflow-x-auto font-['Roboto'] text-xl");
+    expect(element).toHaveClass('overflow-x-auto font-mono text-xl');
   });
 
   it('should be render action group', () => {
@@ -78,6 +78,6 @@ describe('<Card />', () => {
 
     const element = screen.getByText(/Card Result Value/);
     expect(element.tagName).toMatch(/p/i);
-    expect(element).toHaveClass("overflow-x-auto font-['Roboto'] text-sm");
+    expect(element).toHaveClass('overflow-x-auto font-mono text-sm');
   });
 });

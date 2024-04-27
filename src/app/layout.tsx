@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 
-import { dmSans, inter, roboto, robotoMono } from 'app/fonts';
+import { inter, robotoMono } from 'assets/fonts';
 
 import Providers from '@/components/providers';
 
@@ -14,10 +14,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${roboto.variable} ${robotoMono.variable} ${dmSans.variable}`}
-    >
+    <html lang="en" className={`${inter.variable} ${robotoMono.variable}`}>
       <body>
         <Providers>{children}</Providers>
       </body>

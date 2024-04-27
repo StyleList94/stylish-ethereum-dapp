@@ -9,7 +9,7 @@ describe('<ErrorContent />', () => {
     render(<ErrorContent>something</ErrorContent>);
 
     expect(screen.getByText(/something/)).toHaveClass(
-      "overflow-x-auto flex flex-col gap-1 font-['Roboto'] text-sm text-[#fa5252]",
+      'overflow-x-auto flex flex-col gap-1 font-mono text-sm text-[#fa5252]',
     );
   });
 });

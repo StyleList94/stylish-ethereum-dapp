@@ -23,7 +23,7 @@ const CardContentItemTitle = ({ children }: PropsWithChildren) => (
 );
 
 const CardContentItemValue = ({ children }: PropsWithChildren) => (
-  <p className="overflow-x-auto font-['Roboto'] text-xl">{children}</p>
+  <p className="overflow-x-auto font-mono text-xl">{children}</p>
 );
 
 const CardActionGroup = ({ children }: PropsWithChildren) => (
@@ -37,7 +37,7 @@ const CardResultBox = ({ children }: PropsWithChildren) => (
 );
 
 const CardResultValue = ({ children }: PropsWithChildren) => (
-  <p className="overflow-x-auto font-['Roboto'] text-sm">{children}</p>
+  <p className="overflow-x-auto font-mono text-sm">{children}</p>
 );
 
 const Card = {
