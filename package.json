@@ -30,7 +30,7 @@
     "react-redux": "^9.1.1",
     "react-toastify": "^10.0.5",
     "react-use": "^17.5.0",
-    "viem": "2.x",
+    "viem": "^2.9.31",
     "wagmi": "^2.5.20"
   },
   "devDependencies": {
