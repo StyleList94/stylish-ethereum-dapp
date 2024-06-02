@@ -46,16 +46,16 @@ const Providers = ({ children }: { children: ReactNode }) => {
 
   return (
     <Provider store={storeRef.current}>
-      <QueryClientProvider client={queryClient}>
-        <ReactQueryStreamedHydration>
-          <WagmiProvider config={config}>
+      <WagmiProvider config={config}>
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryStreamedHydration>
             <RouteProgress />
             {children}
             <ToastContainer />
             <Updater />
-          </WagmiProvider>
-        </ReactQueryStreamedHydration>
-      </QueryClientProvider>
+          </ReactQueryStreamedHydration>
+        </QueryClientProvider>
+      </WagmiProvider>
     </Provider>
   );
 };
