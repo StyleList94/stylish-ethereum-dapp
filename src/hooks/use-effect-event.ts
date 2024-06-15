@@ -1,13 +1,11 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useInsertionEffect, useRef } from 'react';
 
-export default function useEffectEvent(fn: () => unknown) {
+export default function useEffectEvent(fn: (...args: never[]) => unknown) {
   const functionRef = useRef(fn);
 
-  useEffect(() => {
+  useInsertionEffect(() => {
     functionRef.current = fn;
   }, [fn]);
 
-  return () => {
-    functionRef.current();
-  };
+  return useCallback((...args: never[]) => functionRef.current(...args), []);
 }
