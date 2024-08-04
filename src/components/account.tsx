@@ -1,6 +1,6 @@
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
-import useMounted from 'hooks/use-mounted';
+import useMounted from '@/hooks/use-mounted';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';
@@ -19,6 +19,8 @@ const Account = () => {
     isPending: isConnecting,
     error: errorConnect,
   } = useConnect();
+
+  console.log(errorConnect);
 
   const { disconnect } = useDisconnect();
 

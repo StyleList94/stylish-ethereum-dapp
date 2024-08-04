@@ -9,12 +9,12 @@ import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
-import { makeStore, AppStore } from 'store';
+import { makeStore, AppStore } from '@/store';
 
+import Updater from '@/components/updater';
 import RouteProgress from '@/components/route-progress';
 
 import 'react-toastify/dist/ReactToastify.css';
-import Updater from '@/components/updater';
 
 const config = createConfig({
   chains: [mainnet, sepolia],

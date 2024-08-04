@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useEffectEvent from 'hooks/use-effect-event';
+import useEffectEvent from '@/hooks/use-effect-event';
 
 type UseTimerResult = number | null;
 

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 
-import pageReducer from 'store/page';
-import txReducer from 'store/transaction';
+import pageReducer from '@/store/page';
+import txReducer from '@/store/transaction';
 
 export const makeStore = () =>
   configureStore({

@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 
-import { inter, robotoMono } from 'assets/fonts';
+import { inter, robotoMono } from '@/assets/fonts';
 
 import Providers from '@/components/providers';
 
-import 'styles/global.css';
+import '@/styles/global.css';
 
 export const metadata: Metadata = {
   title: 'Stylish Ethereum App',

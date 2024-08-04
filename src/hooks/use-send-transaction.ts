@@ -4,8 +4,8 @@ import {
   type UseSendTransactionParameters,
 } from 'wagmi';
 
-import { useAppDispatch } from 'store/hooks';
-import { setAddressToPendingTxHash } from 'store/transaction';
+import { useAppDispatch } from '@/store/hooks';
+import { setAddressToPendingTxHash } from '@/store/transaction';
 import type { Config, ResolvedRegister } from '@wagmi/core';
 
 export default function useSendTransaction<

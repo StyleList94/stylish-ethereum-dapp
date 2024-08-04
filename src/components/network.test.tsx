@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { fireEvent, render, screen } from 'lib/test-utils';
+import { fireEvent, render, screen } from '@/lib/test-utils';
 
 import Network from '@/components/network';
 import Account from '@/components/account';

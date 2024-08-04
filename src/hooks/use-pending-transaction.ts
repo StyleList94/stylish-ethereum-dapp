@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useWaitForTransactionReceipt } from 'wagmi';
 
-import { useAppSelector } from 'store/hooks';
+import { useAppSelector } from '@/store/hooks';
 
 export default function usePendingTransaction() {
   const latestTxHash = useAppSelector(

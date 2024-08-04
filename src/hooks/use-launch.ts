@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import useEffectEvent from 'hooks/use-effect-event';
+import useEffectEvent from '@/hooks/use-effect-event';
 
 type UseLaunchResult = {
   remainTime: number | null;

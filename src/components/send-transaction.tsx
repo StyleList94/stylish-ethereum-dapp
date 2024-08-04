@@ -9,10 +9,10 @@ import {
 import { formatEther, parseEther } from 'viem';
 import { useQueryClient } from '@tanstack/react-query';
 
-import useSendTransaction from 'hooks/use-send-transaction';
-import usePendingTransaction from 'hooks/use-pending-transaction';
-import { useAppSelector } from 'store/hooks';
-import { replacer } from 'lib/utils';
+import useSendTransaction from '@/hooks/use-send-transaction';
+import usePendingTransaction from '@/hooks/use-pending-transaction';
+import { useAppSelector } from '@/store/hooks';
+import { replacer } from '@/lib/utils';
 
 import Card from '@/components/card';
 import ErrorContent from '@/components/error-content';

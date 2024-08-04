@@ -35,11 +35,9 @@ const AllTheProviders = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <WagmiProvider config={config} reconnectOnMount={false}>
-        {children}
-      </WagmiProvider>
-    </QueryClientProvider>
+    <WagmiProvider config={config} reconnectOnMount={false}>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </WagmiProvider>
   );
 };
 

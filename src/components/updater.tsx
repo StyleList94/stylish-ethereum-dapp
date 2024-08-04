@@ -4,8 +4,8 @@ import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
 import {
   findPendingTxHash,
   removeAddressToPendingTxHash,
-} from 'store/transaction';
-import { useAppDispatch, useAppSelector } from 'store/hooks';
+} from '@/store/transaction';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 
 const Updater = () => {
   const dispatch = useAppDispatch();
