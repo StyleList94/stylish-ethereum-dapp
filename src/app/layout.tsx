@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 
 import { inter, robotoMono } from '@/assets/fonts';
 
@@ -10,6 +10,13 @@ import '@/styles/global.css';
 export const metadata: Metadata = {
   title: 'Stylish Ethereum App',
   description: 'Your Stylish DApp',
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
