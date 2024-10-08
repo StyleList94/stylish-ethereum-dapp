@@ -20,8 +20,6 @@ const Account = () => {
     error: errorConnect,
   } = useConnect();
 
-  console.log(errorConnect);
-
   const { disconnect } = useDisconnect();
 
   const isMounted = useMounted();
