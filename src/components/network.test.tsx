@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@/lib/test-utils';
 
 import Network from '@/components/network';
