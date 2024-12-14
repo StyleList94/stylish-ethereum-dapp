@@ -68,15 +68,17 @@ const SendTransaction = () => {
     <Card.Section>
       <Card.Title>Transaction Test</Card.Title>
       <Card.ContentList>
-        <Card.ContentItem>
-          <Card.ItemTitle>Balance</Card.ItemTitle>
-          <Card.ItemValue>
-            <p className="text-base">
-              {formatEther(balance?.value || 0n)}{' '}
-              {chain?.nativeCurrency.symbol.toUpperCase() || 'ETH'}
-            </p>
-          </Card.ItemValue>
-        </Card.ContentItem>
+        {balance && (
+          <Card.ContentItem>
+            <Card.ItemTitle>Balance</Card.ItemTitle>
+            <Card.ItemValue>
+              <p className="text-base">
+                {formatEther(balance.value)}{' '}
+                {chain && chain.nativeCurrency.symbol.toUpperCase()}
+              </p>
+            </Card.ItemValue>
+          </Card.ContentItem>
+        )}
         <Card.ContentItem>
           <Card.ItemTitle>Send Tx Status</Card.ItemTitle>
           <Card.ItemValue>{sendTxStatus}</Card.ItemValue>
