@@ -14,8 +14,21 @@ import usePendingTransaction from '@/hooks/use-pending-transaction';
 import { useAppSelector } from '@/store/hooks';
 import { replacer } from '@/lib/utils';
 
-import Card from '@/components/card';
+import {
+  Card,
+  CardContent,
+  CardContentItem,
+  CardContentItemTitle,
+  CardContentItemValue,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import ErrorContent from '@/components/error-content';
+import { Button } from '@/components/ui/button';
+import Label from '@/components/ui/label';
+import Input from '@/components/ui/input';
 
 const SendTransaction = () => {
   const queryClient = useQueryClient();
@@ -65,66 +78,61 @@ const SendTransaction = () => {
   }, [blockNumber, queryClient, queryKey]);
 
   return (
-    <Card.Section>
-      <Card.Title>Transaction Test</Card.Title>
-      <Card.ContentList>
+    <Card className="w-full max-w-[350px]">
+      <CardHeader>
+        <CardTitle>Transaction</CardTitle>
+        <CardDescription>Test to send Token</CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-2 w-full">
         {balance && (
-          <Card.ContentItem>
-            <Card.ItemTitle>Balance</Card.ItemTitle>
-            <Card.ItemValue>
-              <p className="text-base">
+          <CardContentItem>
+            <CardContentItemTitle>Balance</CardContentItemTitle>
+            <CardContentItemValue>
+              <span className="text-base">
                 {formatEther(balance.value)}{' '}
                 {chain && chain.nativeCurrency.symbol.toUpperCase()}
-              </p>
-            </Card.ItemValue>
-          </Card.ContentItem>
+              </span>
+            </CardContentItemValue>
+          </CardContentItem>
         )}
-        <Card.ContentItem>
-          <Card.ItemTitle>Send Tx Status</Card.ItemTitle>
-          <Card.ItemValue>{sendTxStatus}</Card.ItemValue>
-        </Card.ContentItem>
-        <Card.ContentItem>
-          <Card.ItemTitle>Wait Tx Status</Card.ItemTitle>
-          <Card.ItemValue>{waitTxStatus}</Card.ItemValue>
-        </Card.ContentItem>
-        <Card.ContentItem>
-          <Card.ItemTitle>Pending Tx Count</Card.ItemTitle>
-          <Card.ItemValue>{pendingTxCount}</Card.ItemValue>
-        </Card.ContentItem>
-        <Card.ContentItem>
-          <Card.ItemTitle>Send</Card.ItemTitle>
-          <Card.ActionGroup>
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="tx-to" className="label">
-                <span className="label-text">To</span>
-              </label>
-              <input
+        <CardContentItem>
+          <CardContentItemTitle>Send Tx Status</CardContentItemTitle>
+          <CardContentItemValue>{sendTxStatus}</CardContentItemValue>
+        </CardContentItem>
+        <CardContentItem>
+          <CardContentItemTitle>Wait Tx Status</CardContentItemTitle>
+          <CardContentItemValue>{waitTxStatus}</CardContentItemValue>
+        </CardContentItem>
+        <CardContentItem>
+          <CardContentItemTitle>Pending Tx Count</CardContentItemTitle>
+          <CardContentItemValue>{pendingTxCount}</CardContentItemValue>
+        </CardContentItem>
+        <CardContentItem className="pt-2">
+          <div className="flex flex-col gap-2.5 w-full">
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="tx-to">To</Label>
+              <Input
                 id="tx-to"
                 type="text"
                 placeholder="Address"
-                className="input input-ghost input-sm w-full max-w-xs"
                 onChange={(e) => setToInput(e.target.value)}
                 value={toInput}
               />
             </div>
 
-            <div className="form-control w-full max-w-xs">
-              <label htmlFor="tx-ether" className="label">
-                <span className="label-text">Ether</span>
-              </label>
-              <input
+            <div className="grid w-full max-w-sm items-center gap-1.5">
+              <Label htmlFor="tx-ether">Ether</Label>
+              <Input
                 id="tx-ether"
                 type="text"
                 placeholder="ETH"
-                className="input input-ghost input-sm w-full max-w-xs"
                 onChange={(e) => setValueInput(e.target.value)}
                 value={valueInput}
               />
             </div>
 
-            <button
-              type="button"
-              className="btn"
+            <Button
               onClick={() => {
                 sendTransaction?.({
                   to: toInput as `0x${string}`,
@@ -134,24 +142,27 @@ const SendTransaction = () => {
               }}
             >
               Send Ether
-            </button>
-          </Card.ActionGroup>
-        </Card.ContentItem>
-      </Card.ContentList>
-      <Card.ContentList>
+            </Button>
+          </div>
+        </CardContentItem>
+      </CardContent>
+
+      <CardFooter>
         {(txHash || latestTxHash) && (
-          <Card.ResultBox>
-            <Card.ItemTitle>Latest Tx Hash</Card.ItemTitle>
-            <Card.ResultValue>{txHash || latestTxHash}</Card.ResultValue>
-          </Card.ResultBox>
+          <div className="flex flex-col gap-1 w-full">
+            <CardContentItemTitle>Latest Tx Hash</CardContentItemTitle>
+            <CardContentItemValue className="text-sm">
+              {txHash || latestTxHash}
+            </CardContentItemValue>
+          </div>
         )}
         {latestTxReceipt && (
-          <Card.ResultBox>
-            <Card.ItemTitle>Latest Tx Receipt</Card.ItemTitle>
-            <Card.ResultValue>
+          <div className="flex flex-col gap-1 w-full">
+            <CardContentItemTitle>Latest Tx Receipt</CardContentItemTitle>
+            <CardContentItemValue className="text-sm">
               {JSON.stringify(latestTxReceipt, replacer)}
-            </Card.ResultValue>
-          </Card.ResultBox>
+            </CardContentItemValue>
+          </div>
         )}
         {errorSendTx && (
           <ErrorContent>
@@ -159,8 +170,8 @@ const SendTransaction = () => {
             <p>{errorSendTx.message}</p>
           </ErrorContent>
         )}
-      </Card.ContentList>
-    </Card.Section>
+      </CardFooter>
+    </Card>
   );
 };
 

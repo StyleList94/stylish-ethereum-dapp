@@ -11,6 +11,7 @@ import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experime
 
 import { makeStore, AppStore } from '@/store';
 
+import ThemeProvider from '@/components/theme-provider';
 import Updater from '@/components/updater';
 import RouteProgress from '@/components/route-progress';
 
@@ -45,18 +46,25 @@ const Providers = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <Provider store={storeRef.current}>
-      <WagmiProvider config={config}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryStreamedHydration>
-            <RouteProgress />
-            {children}
-            <ToastContainer />
-            <Updater />
-          </ReactQueryStreamedHydration>
-        </QueryClientProvider>
-      </WagmiProvider>
-    </Provider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <Provider store={storeRef.current}>
+        <WagmiProvider config={config}>
+          <QueryClientProvider client={queryClient}>
+            <ReactQueryStreamedHydration>
+              <RouteProgress />
+              {children}
+              <ToastContainer />
+              <Updater />
+            </ReactQueryStreamedHydration>
+          </QueryClientProvider>
+        </WagmiProvider>
+      </Provider>
+    </ThemeProvider>
   );
 };
 

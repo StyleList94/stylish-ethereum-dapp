@@ -1,9 +1,22 @@
+'use client';
+
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 
 import useMounted from '@/hooks/use-mounted';
 
-import Card from '@/components/card';
+import {
+  Card,
+  CardContent,
+  CardContentItem,
+  CardContentItemTitle,
+  CardContentItemValue,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import ErrorContent from '@/components/error-content';
+import { Button } from '@/components/ui/button';
 
 const Account = () => {
   const {
@@ -25,65 +38,67 @@ const Account = () => {
   const isMounted = useMounted();
 
   return (
-    <Card.Section>
-      <Card.Title>Account</Card.Title>
-      <Card.ContentList>
-        <Card.ContentItem>
-          <Card.ItemTitle>Status</Card.ItemTitle>
-          <Card.ItemValue>{status}</Card.ItemValue>
-        </Card.ContentItem>
-        {address && (
-          <Card.ContentItem>
-            <Card.ItemTitle>Address</Card.ItemTitle>
-            <Card.ItemValue>{address}</Card.ItemValue>
-          </Card.ContentItem>
-        )}
-        {activeConnector && (
-          <Card.ContentItem>
-            <Card.ItemTitle>Connector</Card.ItemTitle>
-            <Card.ItemValue>{activeConnector.name}</Card.ItemValue>
-          </Card.ContentItem>
-        )}
-      </Card.ContentList>
+    <Card className="w-full max-w-[350px]">
+      <CardHeader>
+        <CardTitle>Account</CardTitle>
+        <CardDescription>EVM Wallet info</CardDescription>
+      </CardHeader>
 
-      {isMounted && (
-        <Card.ContentItem>
-          <Card.ItemTitle>Connect</Card.ItemTitle>
-          <Card.ActionGroup>
-            {!isConnected &&
-              connectors.map((connector) => (
-                <button
-                  type="button"
-                  className="btn"
-                  key={`connector-${connector.id}`}
-                  onClick={() => connect({ connector })}
-                  disabled={isConnecting}
-                >
-                  {isConnecting && (
-                    <span className="loading loading-spinner loading-md" />
-                  )}{' '}
-                  {connector.id}
-                </button>
-              ))}
-            {isConnected && (
-              <button
-                type="button"
-                className="btn"
-                onClick={() => disconnect()}
-              >
-                Disconnect
-              </button>
-            )}
-          </Card.ActionGroup>
-        </Card.ContentItem>
-      )}
-      {errorConnect && (
-        <ErrorContent>
-          <p>{errorConnect.name}</p>
-          <p>{errorConnect.message}</p>
-        </ErrorContent>
-      )}
-    </Card.Section>
+      <CardContent className="flex flex-col gap-2">
+        <CardContentItem>
+          <CardContentItemTitle>Status</CardContentItemTitle>
+          <CardContentItemValue>{status}</CardContentItemValue>
+        </CardContentItem>
+
+        {address && (
+          <CardContentItem>
+            <CardContentItemTitle>Address</CardContentItemTitle>
+            <CardContentItemValue>{address}</CardContentItemValue>
+          </CardContentItem>
+        )}
+
+        {activeConnector && (
+          <CardContentItem>
+            <CardContentItemTitle>Connector</CardContentItemTitle>
+            <CardContentItemValue>{activeConnector.name}</CardContentItemValue>
+          </CardContentItem>
+        )}
+      </CardContent>
+
+      <CardFooter>
+        {isMounted && (
+          <CardContentItem className="flex flex-col gap-2 w-full">
+            <div className="flex flex-col gap-1 w-full">
+              {!isConnected &&
+                connectors.map((connector) => (
+                  <Button
+                    key={`connector-${connector.id}`}
+                    onClick={() => connect({ connector })}
+                    disabled={isConnecting}
+                    variant="outline"
+                  >
+                    {isConnecting && (
+                      <span className="loading loading-spinner loading-md" />
+                    )}{' '}
+                    {connector.id}
+                  </Button>
+                ))}
+              {isConnected && (
+                <Button onClick={() => disconnect()} variant="outline">
+                  Disconnect
+                </Button>
+              )}
+            </div>
+          </CardContentItem>
+        )}
+        {errorConnect && (
+          <ErrorContent>
+            <p>{errorConnect.name}</p>
+            <p>{errorConnect.message}</p>
+          </ErrorContent>
+        )}
+      </CardFooter>
+    </Card>
   );
 };
 

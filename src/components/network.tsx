@@ -1,7 +1,19 @@
-import React from 'react';
+'use client';
+
 import { useAccount, useSwitchChain } from 'wagmi';
 
-import Card from '@/components/card';
+import {
+  Card,
+  CardContent,
+  CardContentItem,
+  CardContentItemTitle,
+  CardContentItemValue,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import ErrorContent from '@/components/error-content';
 
 const Network = () => {
@@ -15,44 +27,54 @@ const Network = () => {
   } = useSwitchChain();
 
   return (
-    <Card.Section>
-      <Card.Title>Network</Card.Title>
-      <Card.ContentList>
-        <Card.ContentItem>
-          <Card.ItemTitle>Chain Id</Card.ItemTitle>
-          <Card.ItemValue>{chain?.id || 'Not supported'}</Card.ItemValue>
-        </Card.ContentItem>
-        <Card.ContentItem>
-          <Card.ItemTitle>Name</Card.ItemTitle>
-          <Card.ItemValue>{chain?.name || 'Not supported'}</Card.ItemValue>
-        </Card.ContentItem>
-        <Card.ContentItem>
-          <Card.ItemTitle>Switch Network Status</Card.ItemTitle>
-          <Card.ItemValue>{switchNetworkStatus}</Card.ItemValue>
-        </Card.ContentItem>
-      </Card.ContentList>
-      <Card.ContentItem>
-        <h3>Switch To</h3>
-        <Card.ActionGroup>
+    <Card className="w-full max-w-[350px]">
+      <CardHeader>
+        <CardTitle>Network</CardTitle>
+        <CardDescription>Chain info</CardDescription>
+      </CardHeader>
+
+      <CardContent className="flex flex-col gap-2">
+        <CardContentItem>
+          <CardContentItemTitle>Chain Id</CardContentItemTitle>
+          <CardContentItemValue>
+            {chain?.id || 'Not supported'}
+          </CardContentItemValue>
+        </CardContentItem>
+        <CardContentItem>
+          <CardContentItemTitle>Name</CardContentItemTitle>
+          <CardContentItemValue>
+            {chain?.name || 'Not supported'}
+          </CardContentItemValue>
+        </CardContentItem>
+        <CardContentItem>
+          <CardContentItemTitle>Switch Network Status</CardContentItemTitle>
+          <CardContentItemValue>{switchNetworkStatus}</CardContentItemValue>
+        </CardContentItem>
+      </CardContent>
+
+      <CardFooter>
+        <div className="flex flex-col gap-1 w-full">
+          <h3 className="font-medium text-sm text-muted-foreground">
+            Switch To
+          </h3>
           {chains.map((chainItem) => (
-            <button
-              type="button"
-              className="btn"
+            <Button
               key={`${chainItem.id}-${chainItem.name}`}
               onClick={() => switchChain?.({ chainId: chainItem.id })}
+              variant="outline"
             >
               {chainItem.name}
-            </button>
+            </Button>
           ))}
-        </Card.ActionGroup>
-      </Card.ContentItem>
+        </div>
+      </CardFooter>
       {errorSwitch && (
         <ErrorContent>
           <p>{errorSwitch.name}</p>
           <p>{errorSwitch.message}</p>
         </ErrorContent>
       )}
-    </Card.Section>
+    </Card>
   );
 };
 
