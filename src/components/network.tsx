@@ -66,14 +66,14 @@ const Network = () => {
               {chainItem.name}
             </Button>
           ))}
+          {errorSwitch && (
+            <ErrorContent>
+              <p>{errorSwitch.name}</p>
+              <p>{errorSwitch.message}</p>
+            </ErrorContent>
+          )}
         </div>
       </CardFooter>
-      {errorSwitch && (
-        <ErrorContent>
-          <p>{errorSwitch.name}</p>
-          <p>{errorSwitch.message}</p>
-        </ErrorContent>
-      )}
     </Card>
   );
 };

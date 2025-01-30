@@ -88,14 +88,14 @@ const Account = () => {
                   Disconnect
                 </Button>
               )}
+              {errorConnect && (
+                <ErrorContent>
+                  <p>{errorConnect.name}</p>
+                  <p>{errorConnect.message}</p>
+                </ErrorContent>
+              )}
             </div>
           </CardContentItem>
-        )}
-        {errorConnect && (
-          <ErrorContent>
-            <p>{errorConnect.name}</p>
-            <p>{errorConnect.message}</p>
-          </ErrorContent>
         )}
       </CardFooter>
     </Card>
