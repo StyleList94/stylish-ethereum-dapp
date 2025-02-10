@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
 import useEffectEvent from '@/hooks/use-effect-event';
 
-type UseTimerResult = number | null;
+type ResultUseTime = { currentTime: number | null; stopTick: () => void };
 
 const INTERVAL_TIME = 100;
 
@@ -10,8 +11,9 @@ const getServerTime = async () => {
   return (await res.json()) as { serverTime: string };
 };
 
-export default function useTime(): UseTimerResult {
+export default function useTime(): ResultUseTime {
   const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const intervalId = useRef<number | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -32,13 +34,20 @@ export default function useTime(): UseTimerResult {
     setCurrentTime((prevState) => (prevState || 0) + INTERVAL_TIME);
   });
 
+  const stopTick = useCallback(() => {
+    if (intervalId.current) {
+      clearInterval(intervalId.current);
+      intervalId.current = null;
+    }
+  }, []);
+
   useEffect(() => {
-    const intervalID = setInterval(onTick, INTERVAL_TIME);
+    intervalId.current = setInterval(onTick, INTERVAL_TIME);
 
     return () => {
-      clearInterval(intervalID);
+      stopTick();
     };
-  }, [onTick]);
+  }, [onTick, stopTick]);
 
-  return currentTime;
+  return { currentTime, stopTick };
 }

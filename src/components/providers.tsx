@@ -13,7 +13,6 @@ import { makeStore, AppStore } from '@/store';
 
 import ThemeProvider from '@/components/theme-provider';
 import Updater from '@/components/updater';
-import RouteProgress from '@/components/route-progress';
 
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -56,7 +55,6 @@ const Providers = ({ children }: { children: ReactNode }) => {
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <ReactQueryStreamedHydration>
-              <RouteProgress />
               {children}
               <ToastContainer />
               <Updater />

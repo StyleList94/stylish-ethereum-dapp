@@ -1,60 +1,31 @@
 import { useEffect, useRef, useState } from 'react';
-import useEffectEvent from '@/hooks/use-effect-event';
 
-type UseLaunchResult = {
+import useTime from '@/hooks/use-time';
+
+type ResultUseLaunch = {
   remainTime: number | null;
   currentTime: number | null;
-  isLaunch: boolean;
+  launched: boolean;
 };
 
-const INTERVAL_TIME = 100;
-
-const getServerTime = async () => {
-  const res = await fetch('/api/time');
-  return (await res.json()) as { serverTime: string };
-};
-
-export default function useLaunch(launchDate: string): UseLaunchResult {
+/**
+ * Countdown to Launch
+ * @param launchDate - Target launch date(Date Value)
+ */
+export default function useLaunch(
+  launchDate: number | string | Date,
+): ResultUseLaunch {
   const launchTime = useRef(new Date(launchDate).getTime());
-  const [currentTime, setCurrentTime] = useState<number | null>(null);
+  const { currentTime, stopTick } = useTime();
   const [remainTime, setRemainTime] = useState<number | null>(null);
-  const countdownIntervalID = useRef<number | null>(null);
 
-  const isLaunch = typeof remainTime === 'number' && remainTime <= 0;
-
-  useEffect(() => {
-    let ignore = false;
-
-    (async () => {
-      const { serverTime } = await getServerTime();
-      if (!ignore) {
-        setCurrentTime(new Date(serverTime).getTime());
-      }
-    })();
-
-    return () => {
-      ignore = true;
-    };
-  }, []);
-
-  const onTick = useEffectEvent(() => {
-    setCurrentTime((prevState) => (prevState || 0) + INTERVAL_TIME);
-  });
+  const launched = typeof remainTime === 'number' && remainTime <= 0;
 
   useEffect(() => {
-    const intervalID = setInterval(onTick, INTERVAL_TIME);
-    countdownIntervalID.current = intervalID;
-
-    return () => {
-      clearInterval(intervalID);
-    };
-  }, [onTick]);
-
-  useEffect(() => {
-    if (isLaunch && countdownIntervalID.current) {
-      clearInterval(countdownIntervalID.current);
+    if (launched) {
+      stopTick();
     }
-  }, [isLaunch]);
+  }, [launched, stopTick]);
 
   useEffect(() => {
     if (currentTime) {
@@ -66,5 +37,5 @@ export default function useLaunch(launchDate: string): UseLaunchResult {
     }
   }, [currentTime]);
 
-  return { remainTime, currentTime, isLaunch };
+  return { remainTime, currentTime, launched };
 }

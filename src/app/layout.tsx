@@ -1,14 +1,14 @@
 import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 
-import { inter, robotoMono } from '@/assets/fonts';
+import { inter, robotoMono, titilliumWeb } from '@/assets/fonts';
 
 import Providers from '@/components/providers';
 
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
-  title: 'Stylish Ethereum App',
+  title: 'Stylish Ethereum DApp',
   description: 'Your Stylish DApp',
 };
 
@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${robotoMono.variable}`}
+      className={`${inter.variable} ${robotoMono.variable} ${titilliumWeb.variable}`}
       suppressHydrationWarning
     >
       <body>

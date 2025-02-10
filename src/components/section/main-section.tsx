@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi';
 
 import useMounted from '@/hooks/use-mounted';
 
+import Container from '@/components/layout/container';
 import Account from '@/components/account';
 import Network from '@/components/network';
 import SignMessage from '@/components/sign-message';
@@ -15,13 +16,14 @@ const MainSection = () => {
   const isMounted = useMounted();
 
   return (
-    <section className="flex flex-col justify-center items-center gap-8 p-12">
-      <h1 className="text-2xl">Stylish Ethereum DApp</h1>
-      <Account />
-      {isMounted && isConnected && <Network />}
-      {isMounted && isConnected && <SignMessage />}
-      {isMounted && isConnected && <SendTransaction />}
-    </section>
+    <Container>
+      <section className="flex flex-col justify-center items-center gap-8 p-6">
+        <Account />
+        {isMounted && isConnected && <Network />}
+        {isMounted && isConnected && <SignMessage />}
+        {isMounted && isConnected && <SendTransaction />}
+      </section>
+    </Container>
   );
 };
 
