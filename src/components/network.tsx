@@ -27,7 +27,7 @@ const Network = () => {
   } = useSwitchChain();
 
   return (
-    <Card className="w-full max-w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Network</CardTitle>
         <CardDescription>Chain info</CardDescription>

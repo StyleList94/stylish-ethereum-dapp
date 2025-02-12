@@ -25,7 +25,7 @@ const SignMessage = () => {
   } = useSignMessage();
 
   return (
-    <Card className="w-full max-w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Signature</CardTitle>
         <CardDescription>Sign Message Test</CardDescription>

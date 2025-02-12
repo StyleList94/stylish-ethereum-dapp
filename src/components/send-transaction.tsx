@@ -78,7 +78,7 @@ const SendTransaction = () => {
   }, [blockNumber, queryClient, queryKey]);
 
   return (
-    <Card className="w-full max-w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Transaction</CardTitle>
         <CardDescription>Test to send Token</CardDescription>

@@ -38,7 +38,7 @@ const Account = () => {
   const isMounted = useMounted();
 
   return (
-    <Card className="w-full max-w-[350px]">
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Account</CardTitle>
         <CardDescription>EVM Wallet info</CardDescription>

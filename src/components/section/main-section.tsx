@@ -9,6 +9,7 @@ import Account from '@/components/account';
 import Network from '@/components/network';
 import SignMessage from '@/components/sign-message';
 import SendTransaction from '@/components/send-transaction';
+import { cn } from '@/lib/utils';
 
 const MainSection = () => {
   const { isConnected } = useAccount();
@@ -17,11 +18,32 @@ const MainSection = () => {
 
   return (
     <Container>
-      <section className="flex flex-col justify-center items-center gap-8 p-6">
-        <Account />
-        {isMounted && isConnected && <Network />}
-        {isMounted && isConnected && <SignMessage />}
-        {isMounted && isConnected && <SendTransaction />}
+      <section
+        className={cn(
+          'grid grid-cols-1 gap-4 py-6',
+          'md:grid-cols-2 md:items-start',
+        )}
+      >
+        <div
+          className={cn(
+            'grid grid-cols-1 gap-4',
+            'md:items-start',
+            'xl:grid-cols-2',
+          )}
+        >
+          <Account />
+          {isMounted && isConnected && <Network />}
+        </div>
+        <div
+          className={cn(
+            'grid grid-cols-1 gap-4',
+            'md:items-start',
+            'xl:grid-cols-2',
+          )}
+        >
+          {isMounted && isConnected && <SignMessage />}
+          {isMounted && isConnected && <SendTransaction />}
+        </div>
       </section>
     </Container>
   );
