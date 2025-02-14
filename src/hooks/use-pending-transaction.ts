@@ -1,16 +1,9 @@
 import { useMemo } from 'react';
 import { useWaitForTransactionReceipt } from 'wagmi';
-
-import { useAppSelector } from '@/store/hooks';
+import useRootStore from '@/store/hooks';
 
 export default function usePendingTransaction() {
-  const latestTxHash = useAppSelector(
-    ({ transaction }) => transaction.latestTxHash,
-  );
-
-  const pendingTxHashQueue = useAppSelector(
-    ({ transaction }) => transaction.pendingTxHashQueue,
-  );
+  const { latestTxHash, pendingTxHashQueue } = useRootStore((state) => state);
 
   const pendingTxCount = useMemo(
     () => pendingTxHashQueue.length,

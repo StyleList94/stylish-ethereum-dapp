@@ -1,13 +1,29 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { createStore } from 'zustand/vanilla';
 
-import pageReducer from '@/store/page';
-import txReducer from '@/store/transaction';
+import {
+  createTransactionSlice,
+  initialTxState,
+  type TransactionSlice,
+  type TransactionState,
+} from '@/store/transaction';
+import {
+  type CounterSlice,
+  type CounterState,
+  createCounterSlice,
+  initialCounterState,
+} from '@/store/counter';
 
-export const makeStore = () =>
-  configureStore({
-    reducer: { page: pageReducer, transaction: txReducer },
-  });
+export type RootStore = TransactionSlice & CounterSlice;
+export type RootState = TransactionState & CounterState;
 
-export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
+const initialState: RootState = {
+  ...initialTxState,
+  ...initialCounterState,
+};
+
+export const createRootStore = (initState: RootState = initialState) =>
+  createStore<RootStore>()((...rest) => ({
+    ...initState,
+    ...createTransactionSlice(...rest),
+    ...createCounterSlice(...rest),
+  }));

@@ -1,20 +1,15 @@
 'use client';
 
-import { type ReactNode, useRef, useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
-import { ToastContainer } from 'react-toastify';
-import { Provider } from 'react-redux';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
-import { makeStore, AppStore } from '@/store';
-
-import ThemeProvider from '@/components/theme-provider';
-import Updater from '@/components/updater';
-
-import 'react-toastify/dist/ReactToastify.css';
+import StoreProvider from '@/providers/store-provider';
+import ThemeProvider from '@/providers/theme-provider';
+import Updater from '@/providers/updater';
 
 const config = createConfig({
   chains: [mainnet, sepolia],
@@ -26,7 +21,7 @@ const config = createConfig({
   connectors: [injected({ target: 'metaMask' })],
 });
 
-const Providers = ({ children }: { children: ReactNode }) => {
+const AppProvider = ({ children }: { children: ReactNode }) => {
   const [queryClient] = useState(
     () =>
       new QueryClient({
@@ -38,12 +33,6 @@ const Providers = ({ children }: { children: ReactNode }) => {
       }),
   );
 
-  const storeRef = useRef<AppStore>(undefined);
-  if (!storeRef.current) {
-    // Create the store instance the first time this renders
-    storeRef.current = makeStore();
-  }
-
   return (
     <ThemeProvider
       attribute="class"
@@ -51,19 +40,18 @@ const Providers = ({ children }: { children: ReactNode }) => {
       enableSystem
       disableTransitionOnChange
     >
-      <Provider store={storeRef.current}>
+      <StoreProvider>
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>
             <ReactQueryStreamedHydration>
               {children}
-              <ToastContainer />
               <Updater />
             </ReactQueryStreamedHydration>
           </QueryClientProvider>
         </WagmiProvider>
-      </Provider>
+      </StoreProvider>
     </ThemeProvider>
   );
 };
 
-export default Providers;
+export default AppProvider;

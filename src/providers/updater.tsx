@@ -1,20 +1,13 @@
 import { useEffect } from 'react';
 import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
 
-import {
-  findPendingTxHash,
-  removeAddressToPendingTxHash,
-} from '@/store/transaction';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import useRootStore from '@/store/hooks';
 
 const Updater = () => {
-  const dispatch = useAppDispatch();
+  const { pendingTxHash, removeAddressToPendingTxHash, findPendingTxHash } =
+    useRootStore((store) => store);
 
   const { address } = useAccount();
-
-  const pendingTxHash = useAppSelector(
-    ({ transaction }) => transaction.pendingTxHash,
-  );
 
   const { status: waitTxStatus } = useWaitForTransactionReceipt({
     hash: pendingTxHash ?? undefined,
@@ -26,15 +19,15 @@ const Updater = () => {
       address &&
       (waitTxStatus === 'success' || waitTxStatus === 'error')
     ) {
-      dispatch(removeAddressToPendingTxHash({ address }));
+      removeAddressToPendingTxHash({ address });
     }
-  }, [dispatch, waitTxStatus, pendingTxHash, address]);
+  }, [removeAddressToPendingTxHash, waitTxStatus, pendingTxHash, address]);
 
   useEffect(() => {
     if (address) {
-      dispatch(findPendingTxHash({ address }));
+      findPendingTxHash({ address });
     }
-  }, [dispatch, address]);
+  }, [findPendingTxHash, address]);
 
   return <div className="updater" />;
 };

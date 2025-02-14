@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next';
 
 import { inter, robotoMono, titilliumWeb } from '@/assets/fonts';
 
-import Providers from '@/components/providers';
+import AppProvider from '@/providers/app-provider';
 
 import '@/styles/global.css';
 
@@ -27,7 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body>
-        <Providers>{children}</Providers>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );

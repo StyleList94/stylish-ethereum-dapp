@@ -6,8 +6,7 @@ import {
   type UseSendTransactionParameters,
 } from 'wagmi';
 
-import { useAppDispatch } from '@/store/hooks';
-import { setAddressToPendingTxHash } from '@/store/transaction';
+import useRootStore from '@/store/hooks';
 
 export default function useSendTransaction<
   InternalConfig extends Config = ResolvedRegister['config'],
@@ -18,7 +17,7 @@ export default function useSendTransaction<
     InternalContext
   > = {},
 ) {
-  const dispatch = useAppDispatch();
+  const { setAddressToPendingTxHash } = useRootStore((state) => state);
 
   const { address } = useAccount();
 
@@ -28,7 +27,7 @@ export default function useSendTransaction<
       ...parameters.mutation,
       onSuccess(hash) {
         if (address) {
-          dispatch(setAddressToPendingTxHash({ txHash: hash, address }));
+          setAddressToPendingTxHash({ txHash: hash, address });
         }
       },
     },

@@ -11,7 +11,6 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import useSendTransaction from '@/hooks/use-send-transaction';
 import usePendingTransaction from '@/hooks/use-pending-transaction';
-import { useAppSelector } from '@/store/hooks';
 import { replacer } from '@/lib/utils';
 
 import {
@@ -29,6 +28,7 @@ import ErrorContent from '@/components/error-content';
 import { Button } from '@/components/ui/button';
 import Label from '@/components/ui/label';
 import Input from '@/components/ui/input';
+import useRootStore from '@/store/hooks';
 
 const SendTransaction = () => {
   const queryClient = useQueryClient();
@@ -46,7 +46,9 @@ const SendTransaction = () => {
 
   const { data: gas } = useEstimateGas({
     to: toInput as `0x${string}`,
-    value: parseEther(`${+(valueInput || '0')}`),
+    value: parseEther(
+      `${(+(valueInput || '0')).toFixed(18).replace(/\.?0+$/, '')}`,
+    ),
     query: {
       enabled: !!toInput && !!valueInput,
     },
@@ -59,13 +61,7 @@ const SendTransaction = () => {
     error: errorSendTx,
   } = useSendTransaction();
 
-  const pendingTxHash = useAppSelector(
-    ({ transaction }) => transaction.pendingTxHash,
-  );
-
-  const latestTxHash = useAppSelector(
-    ({ transaction }) => transaction.latestTxHash,
-  );
+  const { pendingTxHash, latestTxHash } = useRootStore((store) => store);
 
   const { pendingTxCount, latestTxReceipt } = usePendingTransaction();
 
@@ -136,7 +132,9 @@ const SendTransaction = () => {
               onClick={() => {
                 sendTransaction?.({
                   to: toInput as `0x${string}`,
-                  value: parseEther(`${+(valueInput || '0')}`),
+                  value: parseEther(
+                    `${(+(valueInput || '0')).toFixed(18).replace(/\.?0+$/, '')}`,
+                  ),
                   gas,
                 });
               }}
@@ -148,28 +146,30 @@ const SendTransaction = () => {
       </CardContent>
 
       <CardFooter>
-        {(txHash || latestTxHash) && (
-          <div className="flex flex-col gap-1 w-full">
-            <CardContentItemTitle>Latest Tx Hash</CardContentItemTitle>
-            <CardContentItemValue className="text-sm">
-              {txHash || latestTxHash}
-            </CardContentItemValue>
-          </div>
-        )}
-        {latestTxReceipt && (
-          <div className="flex flex-col gap-1 w-full">
-            <CardContentItemTitle>Latest Tx Receipt</CardContentItemTitle>
-            <CardContentItemValue className="text-sm">
-              {JSON.stringify(latestTxReceipt, replacer)}
-            </CardContentItemValue>
-          </div>
-        )}
-        {errorSendTx && (
-          <ErrorContent>
-            <p>{errorSendTx.name}</p>
-            <p>{errorSendTx.message}</p>
-          </ErrorContent>
-        )}
+        <div className="flex flex-col gap-3 w-full">
+          {errorSendTx && (
+            <ErrorContent>
+              <p>{errorSendTx.name}</p>
+              <p>{errorSendTx.message}</p>
+            </ErrorContent>
+          )}
+          {(txHash || latestTxHash) && (
+            <>
+              <CardContentItemTitle>Latest Tx Hash</CardContentItemTitle>
+              <CardContentItemValue className="text-sm">
+                {txHash || latestTxHash}
+              </CardContentItemValue>
+            </>
+          )}
+          {latestTxReceipt && (
+            <>
+              <CardContentItemTitle>Latest Tx Receipt</CardContentItemTitle>
+              <CardContentItemValue className="text-sm">
+                {JSON.stringify(latestTxReceipt, replacer)}
+              </CardContentItemValue>
+            </>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );

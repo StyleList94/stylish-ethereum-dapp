@@ -1,66 +1,86 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { type StateCreator } from 'zustand';
 
-import type { PayloadAction } from '@reduxjs/toolkit';
+import { type RootStore } from '@/store/index';
 
 const WEB_STORAGE_PREFIX = 'STYLISH_ETHEREUM_DAPP';
 
-type State = {
+export type TransactionState = {
   pendingTxHash: `0x${string}` | null;
   latestTxHash: `0x${string}` | null;
   pendingTxHashQueue: `0x${string}`[];
 };
 
+type FindPendingTxHashPayload = {
+  address: `0x${string}`;
+};
+
+type SetAddressToPendingTxHashPayload = {
+  address: `0x${string}`;
+  txHash: `0x${string}`;
+};
+
+type RemoveAddressToPendingTxHashPayload = {
+  address: `0x${string}`;
+};
+
+type SetPendingTxHashPayload = {
+  txHash: `0x${string}`;
+};
+
+export type TransactionActions = {
+  findPendingTxHash: (payload: FindPendingTxHashPayload) => void;
+  setAddressToPendingTxHash: (
+    payload: SetAddressToPendingTxHashPayload,
+  ) => void;
+  removeAddressToPendingTxHash: (
+    payload: RemoveAddressToPendingTxHashPayload,
+  ) => void;
+  setPendingTxHash: (payload: SetPendingTxHashPayload) => void;
+  resetPendingTxHash: () => void;
+  resetPendingTxHashQueue: () => void;
+};
+
+export type TransactionSlice = TransactionState & TransactionActions;
+
 type PendingTxList = { [key: string]: `0x${string}`[] };
 
-type PayloadFindPendingTxHash = {
-  address: `0x${string}`;
-};
-
-type PayloadSetAddressToPendingTxHash = {
-  address: `0x${string}`;
-  txHash: `0x${string}`;
-};
-
-type PayloadRemoveAddressToPendingTxHash = {
-  address: `0x${string}`;
-};
-
-type PayloadSetPendingTxHash = {
-  txHash: `0x${string}`;
-};
-
-const initialState: State = {
+export const initialTxState: TransactionState = {
   pendingTxHash: null,
   latestTxHash: null,
   pendingTxHashQueue: [],
 };
 
-const transactionSlice = createSlice({
-  name: 'transaction',
-  initialState,
-  reducers: {
-    findPendingTxHash: (
-      state,
-      action: PayloadAction<PayloadFindPendingTxHash>,
-    ) => {
-      const { address } = action.payload;
+export const createTransactionSlice: StateCreator<
+  RootStore,
+  [],
+  [],
+  TransactionSlice
+> = (set) => ({
+  ...initialTxState,
+  findPendingTxHash: (payload) =>
+    set((prevState) => {
+      const { address } = payload;
       const pendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
 
-      if (pendingTxList) {
-        const txHashQueue =
-          (JSON.parse(pendingTxList) as PendingTxList)?.[address] ?? [];
-
-        state.pendingTxHashQueue = txHashQueue;
-        state.pendingTxHash = txHashQueue[0] || null;
+      if (!pendingTxList) {
+        return prevState;
       }
-    },
-    setAddressToPendingTxHash: (
-      state,
-      action: PayloadAction<PayloadSetAddressToPendingTxHash>,
-    ) => {
-      const { address, txHash } = action.payload;
+
+      const txHashQueue =
+        (JSON.parse(pendingTxList) as PendingTxList)?.[address] ?? [];
+
+      return {
+        ...prevState,
+        pendingTxHashQueue: txHashQueue,
+        pendingTxHash: txHashQueue[0] || null,
+      };
+    }),
+
+  setAddressToPendingTxHash: (payload: SetAddressToPendingTxHashPayload) =>
+    set((prevState) => {
+      const { address, txHash } = payload;
       const rawPendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
@@ -80,72 +100,80 @@ const transactionSlice = createSlice({
         }),
       );
 
-      state.pendingTxHash = nextPendingTxHashQueue[0] || null;
-      state.pendingTxHashQueue = nextPendingTxHashQueue;
-    },
-    removeAddressToPendingTxHash: (
-      state,
-      action: PayloadAction<PayloadRemoveAddressToPendingTxHash>,
-    ) => {
-      const { address } = action.payload;
+      return {
+        ...prevState,
+        pendingTxHash: nextPendingTxHashQueue[0] || null,
+        pendingTxHashQueue: nextPendingTxHashQueue,
+      };
+    }),
+
+  removeAddressToPendingTxHash: (
+    payload: RemoveAddressToPendingTxHashPayload,
+  ) =>
+    set((prevState) => {
+      const { address } = payload;
       const rawPendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
 
-      if (rawPendingTxList) {
-        const filteredPendingTxList = JSON.parse(
-          rawPendingTxList,
-        ) as PendingTxList;
-        const txHashQueue = filteredPendingTxList?.[address] ?? [];
-
-        state.latestTxHash = txHashQueue.shift() ?? null;
-
-        if (!txHashQueue.length) {
-          state.pendingTxHash = null;
-          state.pendingTxHashQueue = [];
-          Reflect.deleteProperty(filteredPendingTxList, address);
-
-          if (!Object.keys(filteredPendingTxList).length) {
-            localStorage.removeItem(
-              `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
-            );
-          }
-        } else {
-          state.pendingTxHash = txHashQueue[0] || null;
-          state.pendingTxHashQueue = txHashQueue;
-          localStorage.setItem(
-            `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
-            JSON.stringify({
-              ...filteredPendingTxList,
-              [address]: txHashQueue,
-            }),
-          );
-        }
+      if (!rawPendingTxList) {
+        return prevState;
       }
-    },
-    setPendingTxHash: (
-      state,
-      action: PayloadAction<PayloadSetPendingTxHash>,
-    ) => {
-      const { txHash } = action.payload;
-      state.pendingTxHash = txHash;
-    },
-    resetPendingTxHash: (state) => {
-      state.pendingTxHash = initialState.pendingTxHash;
-    },
-    resetPendingTxHashQueue: (state) => {
-      state.pendingTxHashQueue = initialState.pendingTxHashQueue;
-    },
-  },
+
+      const filteredPendingTxList = JSON.parse(
+        rawPendingTxList,
+      ) as PendingTxList;
+      const txHashQueue = filteredPendingTxList?.[address] ?? [];
+
+      let nextPendingTxHash: TransactionState['pendingTxHash'];
+      let nextPendingTxHashQueue: TransactionState['pendingTxHashQueue'];
+
+      const latestTxHash = txHashQueue.shift() ?? null;
+
+      if (!txHashQueue.length) {
+        nextPendingTxHash = null;
+        nextPendingTxHashQueue = [];
+
+        Reflect.deleteProperty(filteredPendingTxList, address);
+
+        if (!Object.keys(filteredPendingTxList).length) {
+          localStorage.removeItem(`${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`);
+        }
+      } else {
+        nextPendingTxHash = txHashQueue[0] || null;
+        nextPendingTxHashQueue = txHashQueue;
+
+        localStorage.setItem(
+          `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
+          JSON.stringify({
+            ...filteredPendingTxList,
+            [address]: txHashQueue,
+          }),
+        );
+      }
+
+      return {
+        ...prevState,
+        latestTxHash,
+        pendingTxHash: nextPendingTxHash,
+        pendingTxHashQueue: nextPendingTxHashQueue,
+      };
+    }),
+  setPendingTxHash: (payload: SetPendingTxHashPayload) =>
+    set((prevState) => ({
+      ...prevState,
+      pendingTxHash: payload.txHash,
+    })),
+
+  resetPendingTxHash: () =>
+    set((prevState) => ({
+      ...prevState,
+      pendingTxHash: initialTxState.pendingTxHash,
+    })),
+
+  resetPendingTxHashQueue: () =>
+    set((prevState) => ({
+      ...prevState,
+      pendingTxHashQueue: initialTxState.pendingTxHashQueue,
+    })),
 });
-
-export const {
-  findPendingTxHash,
-  setAddressToPendingTxHash,
-  removeAddressToPendingTxHash,
-  setPendingTxHash,
-  resetPendingTxHash,
-  resetPendingTxHashQueue,
-} = transactionSlice.actions;
-
-export default transactionSlice.reducer;
