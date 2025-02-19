@@ -2,14 +2,14 @@ import '@testing-library/jest-dom';
 
 import { render, screen } from '@testing-library/react';
 
-import MainContent from './main-container';
+import MainContainer from '../main-container';
 
-describe('<MainContent />', () => {
+describe('<MainContainer />', () => {
   it('should be rendered', () => {
     render(
-      <MainContent>
+      <MainContainer>
         <p>Crazy Love</p>
-      </MainContent>,
+      </MainContainer>,
     );
 
     expect(screen.getByText(/Crazy Love/)).toBeInTheDocument();

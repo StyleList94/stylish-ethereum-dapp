@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@/lib/test-utils';
 
-import Network from '@/components/network';
-import Account from '@/components/account';
+import Network from '../network';
+import Account from '../account';
 
 beforeEach(() => {});
 

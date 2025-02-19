@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/vitest';
 import { fireEvent, render, screen } from '@/lib/test-utils';
 
-import Account from '@/components/account';
+import Account from '../account';
 
 describe('<Account />', () => {
   it('should be connect and disconnect', async () => {

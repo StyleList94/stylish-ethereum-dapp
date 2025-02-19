@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom/vitest';
 
-import ErrorContent from '@/components/error-content';
-
 import { render, screen } from '@/lib/test-utils';
+
+import ErrorContent from '../error-content';
 
 describe('<ErrorContent />', () => {
   it('should be render', () => {

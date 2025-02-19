@@ -5,7 +5,7 @@ import { ThemeProvider, useTheme } from 'next-themes';
 
 import type { Mock } from 'vitest';
 
-import ThemeControlSwitch from './theme-control-switch';
+import ThemeControlSwitch from '../theme-control-switch';
 
 vi.mock('next-themes', async () => {
   const actualModule = await vi.importActual('next-themes');
