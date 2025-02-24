@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  useAccount,
-  useBalance,
-  useBlockNumber,
-  useEstimateGas,
-  useWaitForTransactionReceipt,
-} from 'wagmi';
+import { useAccount, useBalance, useBlockNumber, useEstimateGas } from 'wagmi';
 import { formatEther, parseEther } from 'viem';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -61,13 +55,13 @@ const SendTransaction = () => {
     error: errorSendTx,
   } = useSendTransaction();
 
-  const { pendingTxHash, latestTxHash } = useRootStore((store) => store);
+  const { latestTxHash } = useRootStore((store) => store);
 
-  const { pendingTxCount, latestTxReceipt } = usePendingTransaction();
-
-  const { status: waitTxStatus } = useWaitForTransactionReceipt({
-    hash: pendingTxHash ?? latestTxHash ?? undefined,
-  });
+  const {
+    pendingTxCount,
+    latestTxReceipt,
+    status: waitTxStatus,
+  } = usePendingTransaction();
 
   useEffect(() => {
     queryClient.invalidateQueries({ queryKey });

@@ -10,6 +10,7 @@ import Network from '@/components/network';
 import SignMessage from '@/components/sign-message';
 import SendTransaction from '@/components/send-transaction';
 import { cn } from '@/lib/utils';
+import SmartContractLauncher from '@/components/smart-contract-launcher';
 
 const MainSection = () => {
   const { isConnected } = useAccount();
@@ -41,7 +42,10 @@ const MainSection = () => {
             'xl:grid-cols-2',
           )}
         >
-          {isMounted && isConnected && <SignMessage />}
+          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+            {isMounted && isConnected && <SmartContractLauncher />}
+            {isMounted && isConnected && <SignMessage />}
+          </div>
           {isMounted && isConnected && <SendTransaction />}
         </div>
       </section>

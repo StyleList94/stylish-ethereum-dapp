@@ -1,28 +1,25 @@
 import {
   useAccount,
-  useSendTransaction as useWagmiSendTransaction,
+  useWriteContract as useWagmiWriteContract,
   type Config,
   type ResolvedRegister,
-  type UseSendTransactionParameters,
-  type UseSendTransactionReturnType,
+  type UseWriteContractParameters,
+  type UseWriteContractReturnType,
 } from 'wagmi';
 
 import useRootStore from '@/store/hooks';
 
-export default function useSendTransaction<
+export default function useWriteContract<
   InternalConfig extends Config = ResolvedRegister['config'],
   InternalContext = unknown,
 >(
-  parameters: UseSendTransactionParameters<
-    InternalConfig,
-    InternalContext
-  > = {},
-): UseSendTransactionReturnType<InternalConfig, InternalContext> {
+  parameters: UseWriteContractParameters<InternalConfig, InternalContext> = {},
+): UseWriteContractReturnType<InternalConfig, InternalContext> {
   const { setAddressToPendingTxHash } = useRootStore((state) => state);
 
   const { address } = useAccount();
 
-  return useWagmiSendTransaction({
+  return useWagmiWriteContract({
     ...parameters,
     mutation: {
       onSuccess(hash) {

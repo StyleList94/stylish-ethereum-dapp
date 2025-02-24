@@ -12,12 +12,6 @@
   border-radius: 24px;
 }
 
-#nprogress .bar {
-  height: 3px;
-}
-
-#nprogress .peg {
-}
 
 @layer base {
   :root {
@@ -78,6 +72,17 @@
 @layer base {
   * {
     @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;

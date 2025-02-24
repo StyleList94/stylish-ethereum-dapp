@@ -16,7 +16,9 @@ const config = createConfig({
   ssr: true,
   transports: {
     [mainnet.id]: http(),
-    [sepolia.id]: http(),
+    [sepolia.id]: http(
+      'https://eth-sepolia.g.alchemy.com/v2/SKuyohYT5v9BKTjRMPWzaOdlEtt03clh',
+    ),
   },
   connectors: [injected({ target: 'metaMask' })],
 });

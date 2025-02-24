@@ -10,9 +10,9 @@ export default function usePendingTransaction() {
     [pendingTxHashQueue],
   );
 
-  const { data: latestTxReceipt } = useWaitForTransactionReceipt({
+  const { data: latestTxReceipt, status } = useWaitForTransactionReceipt({
     hash: latestTxHash ?? undefined,
   });
 
-  return { pendingTxCount, latestTxReceipt };
+  return { pendingTxCount, latestTxReceipt, status };
 }
