@@ -11,6 +11,7 @@ import SignMessage from '@/components/sign-message';
 import SendTransaction from '@/components/send-transaction';
 import { cn } from '@/lib/utils';
 import SmartContractLauncher from '@/components/smart-contract-launcher';
+import UnitConverter from '@/components/unit-converter';
 
 const MainSection = () => {
   const { isConnected } = useAccount();
@@ -33,7 +34,10 @@ const MainSection = () => {
           )}
         >
           <Account />
-          {isMounted && isConnected && <Network />}
+          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+            {isMounted && isConnected && <Network />}
+            <UnitConverter />
+          </div>
         </div>
         <div
           className={cn(

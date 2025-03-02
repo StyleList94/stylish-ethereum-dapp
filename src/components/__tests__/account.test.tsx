@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom/vitest';
+
 import { fireEvent, render, screen } from '@/lib/test-utils';
 
 import Account from '../account';

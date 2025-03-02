@@ -1,6 +1,7 @@
 import {
   cn,
   convertToAbiTypedValue,
+  convertUnits,
   parseAbiFileToJSON,
   replacer,
   separateFunctionInput,
@@ -184,5 +185,16 @@ describe('convertToAbiTypedValue', () => {
     ).toBe('0x29072219f93D6893F9201Adfc31246169e785252');
 
     expect(convertToAbiTypedValue('ethereum', 'string')).toBe('ethereum');
+  });
+});
+
+describe('convertUnits', () => {
+  it('should be converted value', () => {
+    expect(convertUnits('1', 18)).toBe('0.000000000000000001');
+    expect(convertUnits('1', 9)).toBe('0.000000001');
+    expect(convertUnits('1', 0)).toBe('1');
+
+    expect(convertUnits('1234000000000000000', 18)).toBe('1.234');
+    expect(convertUnits('5678000009', 9)).toBe('5.678000009');
   });
 });

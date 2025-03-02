@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 import type { Abi } from 'viem';
+import BigNumber from 'bignumber.js';
 
 export const shortenAddress = (account: string) =>
   `${account.substring(0, 10)}...${account.substring(32)}`;
@@ -73,3 +74,10 @@ export const convertToAbiTypedValue = (value: string, type: string) => {
 
   return value;
 };
+
+export const convertUnits = (value: string, decimals: number) =>
+  new BigNumber(10)
+    .pow(-decimals)
+    .multipliedBy(value)
+    .toFixed(100)
+    .replace(/\.?0+$/, '');
