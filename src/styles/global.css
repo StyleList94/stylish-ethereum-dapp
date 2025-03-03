@@ -2,17 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-&::-webkit-scrollbar {
-  background-color: #fff;
-  height: 8px;
-}
-
-&::-webkit-scrollbar-thumb {
-  background-color: rgba(206, 212, 218, 0.5);
-  border-radius: 24px;
-}
-
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -77,8 +66,6 @@
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {

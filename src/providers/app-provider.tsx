@@ -11,6 +11,8 @@ import StoreProvider from '@/providers/store-provider';
 import ThemeProvider from '@/providers/theme-provider';
 import Updater from '@/providers/updater';
 
+import Toaster from '@/components/ui/sonner';
+
 const config = createConfig({
   chains: [mainnet, sepolia],
   ssr: true,
@@ -48,6 +50,7 @@ const AppProvider = ({ children }: { children: ReactNode }) => {
             <ReactQueryStreamedHydration>
               {children}
               <Updater />
+              <Toaster />
             </ReactQueryStreamedHydration>
           </QueryClientProvider>
         </WagmiProvider>

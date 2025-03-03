@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/card';
 import Label from '@/components/ui/label';
 import Input from '@/components/ui/input';
+import CopyToClipboard from '@/components/copy-to-clipboard';
 
 type Unit = 'ether' | 'gwei' | 'wei';
 
@@ -69,40 +70,59 @@ const UnitConverter = () => {
 
       <CardContent>
         <div className="flex flex-col gap-2.5 w-full">
-          <div className="grid w-full max-w-sm items-center gap-1.5">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="ether">Ether</Label>
-            <Input
-              id="ether"
-              type="text"
-              placeholder="Ether"
-              name="ether"
-              onChange={handleChange}
-              value={inputValues.ether}
-            />
+            <div className="flex gap-1">
+              <Input
+                id="ether"
+                type="text"
+                placeholder="Ether"
+                name="ether"
+                onChange={handleChange}
+                value={inputValues.ether}
+              />
+              <CopyToClipboard
+                copyText={inputValues.ether}
+                disabled={!inputValues.ether}
+              />
+            </div>
           </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="gwei">Gwei</Label>
-            <Input
-              id="gwei"
-              type="text"
-              placeholder="Gwei"
-              name="gwei"
-              onChange={handleChange}
-              value={inputValues.gwei}
-            />
+            <div className="flex gap-1">
+              <Input
+                id="gwei"
+                type="text"
+                placeholder="Gwei"
+                name="gwei"
+                onChange={handleChange}
+                value={inputValues.gwei}
+              />
+              <CopyToClipboard
+                copyText={inputValues.gwei}
+                disabled={!inputValues.gwei}
+              />
+            </div>
           </div>
 
-          <div className="grid w-full max-w-sm items-center gap-1.5">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="wei">Wei</Label>
-            <Input
-              id="wei"
-              type="text"
-              placeholder="Wei"
-              name="wei"
-              onChange={handleChange}
-              value={inputValues.wei}
-            />
+
+            <div className="flex gap-1">
+              <Input
+                id="wei"
+                type="text"
+                placeholder="Wei"
+                name="wei"
+                onChange={handleChange}
+                value={inputValues.wei}
+              />
+              <CopyToClipboard
+                copyText={inputValues.wei}
+                disabled={!inputValues.wei}
+              />
+            </div>
           </div>
         </div>
       </CardContent>

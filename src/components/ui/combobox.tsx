@@ -29,9 +29,17 @@ type Props = {
   value: string;
   onValueChange: (value: string) => void;
   options: Option[];
+  placeholder?: string;
+  queryPlaceholder?: string;
 };
 
-const Combobox = ({ value, onValueChange, options }: Props) => {
+const Combobox = ({
+  value,
+  onValueChange,
+  options,
+  placeholder = 'Select option...',
+  queryPlaceholder = 'Search option...',
+}: Props) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -45,13 +53,13 @@ const Combobox = ({ value, onValueChange, options }: Props) => {
         >
           {value
             ? options.find((option) => option.value === value)?.label
-            : 'Select option...'}
+            : placeholder}
           <ChevronsUpDown className="opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search option..." className="h-9" />
+          <CommandInput placeholder={queryPlaceholder} className="h-9" />
           <CommandList>
             <CommandEmpty>No option found.</CommandEmpty>
             <CommandGroup>

@@ -20,14 +20,14 @@ export default function useSendTransaction<
 ): UseSendTransactionReturnType<InternalConfig, InternalContext> {
   const { setAddressToPendingTxHash } = useRootStore((state) => state);
 
-  const { address } = useAccount();
+  const { address, chainId } = useAccount();
 
   return useWagmiSendTransaction({
     ...parameters,
     mutation: {
       onSuccess(hash) {
-        if (address) {
-          setAddressToPendingTxHash({ txHash: hash, address });
+        if (address && chainId) {
+          setAddressToPendingTxHash({ txHash: hash, address, chainId });
         }
       },
       ...parameters.mutation,

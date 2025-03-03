@@ -1,6 +1,7 @@
 'use client';
 
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { LoaderCircleIcon } from 'lucide-react';
 
 import useMounted from '@/hooks/use-mounted';
 
@@ -17,6 +18,8 @@ import {
 } from '@/components/ui/card';
 import ErrorContent from '@/components/error-content';
 import { Button } from '@/components/ui/button';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { useState, useTransition } from 'react';
 
 const Account = () => {
   const {
@@ -25,15 +28,18 @@ const Account = () => {
     connector: activeConnector,
     isConnected,
   } = useAccount();
-
   const {
     connect,
     connectors,
     isPending: isConnecting,
     error: errorConnect,
   } = useConnect();
-
   const { disconnect } = useDisconnect();
+
+  const [isPending, startTransition] = useTransition();
+  const [selectedConnector, setSelectedConnector] = useState<string | null>(
+    null,
+  );
 
   const isMounted = useMounted();
 
@@ -53,7 +59,10 @@ const Account = () => {
         {address && (
           <CardContentItem>
             <CardContentItemTitle>Address</CardContentItemTitle>
-            <CardContentItemValue>{address}</CardContentItemValue>
+            <ScrollArea className="pb-1.5">
+              <CardContentItemValue>{address}</CardContentItemValue>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </CardContentItem>
         )}
 
@@ -65,7 +74,7 @@ const Account = () => {
         )}
       </CardContent>
 
-      <CardFooter>
+      <CardFooter className="flex-col gap-4">
         {isMounted && (
           <CardContentItem className="flex flex-col gap-2 w-full">
             <div className="flex flex-col gap-1 w-full">
@@ -73,13 +82,20 @@ const Account = () => {
                 connectors.map((connector) => (
                   <Button
                     key={`connector-${connector.id}`}
-                    onClick={() => connect({ connector })}
-                    disabled={isConnecting}
+                    onClick={() => {
+                      startTransition(() => {
+                        setSelectedConnector(connector.id);
+                        connect({ connector });
+                      });
+                    }}
+                    disabled={isPending || isConnecting}
                     variant="outline"
                   >
-                    {isConnecting && (
-                      <span className="loading loading-spinner loading-md" />
-                    )}{' '}
+                    {isConnecting &&
+                      !isPending &&
+                      connector.id === selectedConnector && (
+                        <LoaderCircleIcon className="animate-spin" />
+                      )}{' '}
                     {connector.id}
                   </Button>
                 ))}
@@ -88,14 +104,14 @@ const Account = () => {
                   Disconnect
                 </Button>
               )}
-              {errorConnect && (
-                <ErrorContent>
-                  <p>{errorConnect.name}</p>
-                  <p>{errorConnect.message}</p>
-                </ErrorContent>
-              )}
             </div>
           </CardContentItem>
+        )}
+        {errorConnect && (
+          <ErrorContent>
+            <p>{errorConnect.name}</p>
+            <p>{errorConnect.message}</p>
+          </ErrorContent>
         )}
       </CardFooter>
     </Card>

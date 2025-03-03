@@ -8,6 +8,11 @@ import Account from '../account';
 beforeEach(() => {});
 
 describe('<Network />', () => {
+  it('should not connect wallet', () => {
+    render(<Network />);
+
+    expect(screen.getByText(/wallet not connected/i)).toBeInTheDocument();
+  });
   it('should be detect and switching network', async () => {
     render(
       <>

@@ -1,9 +1,11 @@
 import type { PropsWithChildren } from 'react';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 
 const ErrorContent = ({ children }: PropsWithChildren) => (
-  <div className="overflow-x-auto flex flex-col gap-1 font-mono text-sm text-[#fa5252]">
+  <ScrollArea className="flex flex-col gap-4 h-40 font-mono text-sm text-red-500 rounded-md border p-3">
     {children}
-  </div>
+    <ScrollBar orientation="horizontal" />
+  </ScrollArea>
 );
 
 export default ErrorContent;

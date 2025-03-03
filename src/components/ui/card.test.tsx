@@ -62,7 +62,7 @@ describe('<Card />', () => {
 
     const element = screen.getByText(/X-rated Content/);
     expect(element.tagName).toMatch(/div/i);
-    expect(element).toHaveClass('flex flex-col gap-0.5');
+    expect(element).toHaveClass('flex flex-col gap-1');
   });
 
   it('should be render content item title', () => {
@@ -70,7 +70,7 @@ describe('<Card />', () => {
 
     const element = screen.getByText(/Command/);
     expect(element.tagName).toMatch(/h3/i);
-    expect(element).toHaveClass('font-medium');
+    expect(element).toHaveClass('font-medium text-sm');
   });
 
   it('should be render content item value', () => {
@@ -78,7 +78,7 @@ describe('<Card />', () => {
 
     const element = screen.getByText(/caffeinate/);
     expect(element.tagName).toMatch(/p/i);
-    expect(element).toHaveClass('overflow-x-auto font-mono text-lg');
+    expect(element).toHaveClass('font-mono text-base');
   });
 
   it('should be render footer', () => {

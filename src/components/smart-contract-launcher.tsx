@@ -1,18 +1,16 @@
 'use client';
 
-import { type ChangeEvent, useMemo, useState } from 'react';
-import { useAccount, useReadContract } from 'wagmi';
+import { type ChangeEvent, useMemo, useRef, useState } from 'react';
+import { useAccount, useChains, useReadContract } from 'wagmi';
 import { type AbiFunction, erc20Abi, erc4626Abi, erc721Abi } from 'viem';
-import { Info, LoaderCircle } from 'lucide-react';
+import { CircleXIcon, InfoIcon, LoaderCircleIcon } from 'lucide-react';
 
-import useRootStore from '@/store/hooks';
 import useEstimateContractGas from '@/hooks/use-estimate-contract-gas';
 import useWriteContract from '@/hooks/use-write-contract';
-import usePendingTransaction from '@/hooks/use-pending-transaction';
 import {
+  cn,
   convertToAbiTypedValue,
   parseAbiFileToJSON,
-  replacer,
   separateFunctionInput,
 } from '@/lib/utils';
 
@@ -37,6 +35,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import Separator from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
+import CopyToClipboard from '@/components/copy-to-clipboard';
 
 type AbiVariant = 'custom' | 'erc20' | 'erc721' | 'erc4626';
 
@@ -46,12 +49,18 @@ type Option = {
 };
 
 const SmartContractLauncher = () => {
+  const inputLoadAbiElement = useRef<HTMLInputElement>(null);
+
+  const [isErrorLoadAbi, setIsErrorLoadAbi] = useState(false);
   const [selectedAbi, setSelectedAbi] = useState<AbiVariant | null>(null);
   const [abiFunctions, setAbiFunctions] = useState<AbiFunction[]>([]);
   const [abiOptions, setAbiOptions] = useState<Option[]>([]);
+
   const [selectedFunction, setSelectedFunction] = useState('');
+  const [selectedNetwork, setSelectedNetwork] = useState('');
   const [selectedAbiFunction, setSelectedAbiFunction] =
     useState<AbiFunction | null>(null);
+
   const [paymentEth, setPaymentEth] = useState('');
 
   const [contractAddress, setContractAddress] = useState('');
@@ -62,10 +71,10 @@ const SmartContractLauncher = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   const { address } = useAccount();
-  const estimateContractGas = useEstimateContractGas();
 
-  const { latestTxHash } = useRootStore((state) => state);
-  const { latestTxReceipt } = usePendingTransaction();
+  const chains = useChains();
+
+  const estimateContractGas = useEstimateContractGas();
 
   const selectedFunctionInputs = useMemo(() => {
     if (selectedAbiFunction) {
@@ -76,28 +85,37 @@ const SmartContractLauncher = () => {
 
   const isExecutable = useMemo(
     () =>
-      !!address &&
       !!contractAddress &&
       !!selectedFunction &&
       Object.values(functionInputs).length === selectedFunctionInputs?.length &&
       !Object.values(functionInputs).includes(''),
-    [
-      address,
-      contractAddress,
-      selectedFunction,
-      functionInputs,
-      selectedFunctionInputs,
-    ],
+    [contractAddress, selectedFunction, functionInputs, selectedFunctionInputs],
   );
 
   const isReadable = useMemo(
     () =>
       selectedAbiFunction?.stateMutability === 'pure' ||
       selectedAbiFunction?.stateMutability === 'view',
+
     [selectedAbiFunction],
   );
 
+  const isAvailableNetwork = useMemo(
+    () => !!address || (!address && !!selectedNetwork),
+    [address, selectedNetwork],
+  );
+
+  const chainOptions: Option[] = useMemo(
+    () =>
+      chains.map((chain) => ({
+        value: chain.name,
+        label: chain.name,
+      })),
+    [chains],
+  );
+
   const resetState = () => {
+    setIsErrorLoadAbi(false);
     setSelectedFunction('');
     setSelectedAbiFunction(null);
     setFunctionInputs({});
@@ -107,19 +125,25 @@ const SmartContractLauncher = () => {
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files![0];
 
-    const resAbi = await parseAbiFileToJSON(selectedFile);
+    try {
+      const resAbi = await parseAbiFileToJSON(selectedFile);
 
-    const filteredAbi = resAbi.filter((item) => item.type === 'function');
+      const filteredAbi = resAbi.filter((item) => item.type === 'function');
 
-    setSelectedAbi('custom');
-    setAbiFunctions(filteredAbi);
-    setAbiOptions(
-      filteredAbi.map((item) => ({
-        label: `${item.name}[${item.inputs.length}]`,
-        value: `${item.name}[${item.inputs.length}]`,
-      })),
-    );
-    resetState();
+      setSelectedAbi('custom');
+      setAbiFunctions(filteredAbi);
+      setAbiOptions(
+        filteredAbi.map((item) => ({
+          label: `${item.name}[${item.inputs.length}]`,
+          value: `${item.name}[${item.inputs.length}]`,
+        })),
+      );
+      resetState();
+    } catch {
+      setSelectedAbi(null);
+      setIsErrorLoadAbi(true);
+      setAbiFunctions([]);
+    }
   };
 
   const handleAbiVariantClick = (variant: AbiVariant) => () => {
@@ -143,6 +167,9 @@ const SmartContractLauncher = () => {
       (item) => item.type === 'function',
     );
 
+    if (inputLoadAbiElement?.current) {
+      inputLoadAbiElement.current.value = '';
+    }
     setSelectedAbi(variant);
     setAbiFunctions(filteredAbi);
     setAbiOptions(
@@ -154,7 +181,7 @@ const SmartContractLauncher = () => {
     resetState();
   };
 
-  const handleValueChange = (value: string) => {
+  const handleFunctionValueChange = (value: string) => {
     try {
       const [functionName, argumentLength] = separateFunctionInput(value);
 
@@ -172,6 +199,10 @@ const SmartContractLauncher = () => {
     } catch {
       /* DO NOTHING */
     }
+  };
+
+  const handleChainValueChange = (value: string) => {
+    setSelectedNetwork(value);
   };
 
   const handleContractAddressChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -203,8 +234,11 @@ const SmartContractLauncher = () => {
       selectedAbiFunction?.inputs.map((param) =>
         convertToAbiTypedValue(functionInputs[param.name!], param.type),
       ) ?? [],
+    chainId: !address
+      ? chains.find((chain) => chain.name === selectedNetwork)?.id
+      : undefined,
     query: {
-      enabled: isExecutable && isReadable,
+      enabled: isExecutable && isReadable && isAvailableNetwork,
     },
   });
 
@@ -216,7 +250,7 @@ const SmartContractLauncher = () => {
   } = useWriteContract();
 
   const handleExecuteClick = async () => {
-    if (!isExecutable || isReadable) {
+    if ((!address && !isExecutable) || isReadable) {
       setErrorMessage('Cannot execute contract function');
       return;
     }
@@ -257,32 +291,43 @@ const SmartContractLauncher = () => {
       </CardHeader>
 
       <CardContent className="flex flex-col gap-2 w-full">
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-2">
+          <div className="grid w-full items-center gap-1.5">
             <Label htmlFor="load-abi">Load ABI</Label>
             <Input
               type="file"
               accept="application/json, .json"
               onChange={handleFileChange}
               id="load-abi"
+              ref={inputLoadAbiElement}
             />
-            <div className="flex gap-1">
-              {['erc20', 'erc721', 'erc4626'].map((abiVariant) => (
-                <Button
-                  key={`abi-variant-${abiVariant}`}
-                  className="flex-1"
-                  variant={selectedAbi === abiVariant ? 'default' : 'outline'}
-                  onClick={handleAbiVariantClick(abiVariant as AbiVariant)}
-                >
-                  {abiVariant.toUpperCase()}
-                </Button>
-              ))}
-            </div>
+          </div>
+          <div className="flex gap-1">
+            {['erc20', 'erc721', 'erc4626'].map((abiVariant) => (
+              <Button
+                key={`abi-variant-${abiVariant}`}
+                className="flex-1"
+                size="sm"
+                variant={selectedAbi === abiVariant ? 'default' : 'outline'}
+                onClick={handleAbiVariantClick(abiVariant as AbiVariant)}
+              >
+                {abiVariant.toUpperCase()}
+              </Button>
+            ))}
           </div>
         </div>
 
+        {isErrorLoadAbi && (
+          <Alert variant="destructive">
+            <CircleXIcon className="h-4 w-4" />
+            <AlertTitle>Fail to load ABI</AlertTitle>
+            <AlertDescription>JSON File is invalided</AlertDescription>
+          </Alert>
+        )}
+
         {abiFunctions && abiFunctions.length > 0 && (
           <div className="flex flex-col gap-2 w-full">
+            <Separator className="my-2" />
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Label htmlFor="contract-address">Contract Address</Label>
               <Input
@@ -294,30 +339,58 @@ const SmartContractLauncher = () => {
             </div>
 
             <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Label htmlFor="contract-address">Function</Label>
+              <Label
+                htmlFor="contract-address"
+                className="flex items-center gap-2"
+              >
+                Function
+                {selectedFunction && (
+                  <Badge variant="secondary">
+                    {selectedAbiFunction?.stateMutability}
+                  </Badge>
+                )}
+              </Label>
               <Combobox
                 value={selectedFunction}
-                onValueChange={handleValueChange}
+                onValueChange={handleFunctionValueChange}
                 options={abiOptions}
+                placeholder="Select function..."
+                queryPlaceholder="Search function..."
               />
             </div>
+
+            {isReadable && !address && (
+              <div className="grid w-full max-w-sm items-center gap-1.5">
+                <Label htmlFor="contract-address">Network</Label>
+                <Combobox
+                  value={selectedNetwork}
+                  onValueChange={handleChainValueChange}
+                  options={chainOptions}
+                  placeholder="Select network..."
+                  queryPlaceholder="Search network..."
+                />
+              </div>
+            )}
 
             <TooltipProvider>
               {selectedFunctionInputs?.map((param) => (
                 <div
                   key={`function-inputs-${param.name}`}
-                  className="grid w-full max-w-sm items-center gap-1.5"
+                  className="grid w-full items-center gap-1.5"
                 >
                   <Label
                     htmlFor={param.name}
                     className="flex items-center gap-1"
                   >
-                    {param.name}
+                    <div className="flex items-center gap-2">
+                      {param.name}
+                      <Badge variant="secondary">{param.type}</Badge>
+                    </div>
 
                     {/\[]$/.test(param.type) && (
                       <Tooltip delayDuration={200}>
                         <TooltipTrigger>
-                          <Info size={14} />
+                          <InfoIcon size={14} />
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Enter multiple values separated by commas.</p>
@@ -336,7 +409,7 @@ const SmartContractLauncher = () => {
               ))}
             </TooltipProvider>
             {selectedAbiFunction?.stateMutability === 'payable' && (
-              <div className="grid w-full max-w-sm items-center gap-1.5">
+              <div className="grid w-full items-center gap-1.5">
                 <Label htmlFor="eth-payment">ETH Payment</Label>
                 <Input
                   type="text"
@@ -346,76 +419,107 @@ const SmartContractLauncher = () => {
                 />
               </div>
             )}
+
             {!!selectedFunction && !isReadable && (
-              <Button
-                variant="outline"
-                disabled={!isExecutable || isWriting}
-                onClick={handleExecuteClick}
-              >
-                {isWriting && <LoaderCircle className="animate-spin" />}
-                Execute
-              </Button>
+              <>
+                {address && (
+                  <Button
+                    variant="outline"
+                    disabled={!isExecutable || isWriting}
+                    onClick={handleExecuteClick}
+                  >
+                    {isWriting && <LoaderCircleIcon className="animate-spin" />}
+                    Execute
+                  </Button>
+                )}
+                {!address && (
+                  <Alert variant="destructive">
+                    <CircleXIcon className="h-4 w-4" />
+                    <AlertTitle>Cannot execute</AlertTitle>
+                    <AlertDescription>Wallet not connected</AlertDescription>
+                  </Alert>
+                )}
+              </>
             )}
           </div>
         )}
       </CardContent>
-      <CardFooter>
-        {isReadable ? (
-          <>
-            {isReading && (
-              <div className="flex justify-center items-center w-full">
-                <LoaderCircle className="animate-spin" />
-              </div>
+
+      {contractAddress && isReadable && isAvailableNetwork && (
+        <CardFooter className="flex flex-col">
+          <div className="flex flex-col gap-1 w-full">
+            <CardContentItemTitle className="flex items-center gap-2">
+              Result{' '}
+              {resultData && (
+                <CopyToClipboard
+                  type="icon"
+                  iconSize={14}
+                  copyText={`${resultData as string | bigint}`}
+                />
+              )}
+            </CardContentItemTitle>
+
+            {!errorReadContract && (
+              <ScrollArea className="rounded-md p-3 border">
+                {isReading && (
+                  <div
+                    className={cn(
+                      'w-full h-5 bg-zinc-200 rounded animate-pulse',
+                      'dark:bg-zinc-800',
+                    )}
+                  />
+                )}
+                {!isReading && resultData && (
+                  <CardContentItemValue className="text-sm">
+                    {resultData}
+                  </CardContentItemValue>
+                )}
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             )}
-            {!isReading && resultData && (
-              <div className="flex flex-col gap-1 w-full">
-                <CardContentItemTitle>Output</CardContentItemTitle>
-                <CardContentItemValue className="text-sm">
-                  {resultData}
-                </CardContentItemValue>
-              </div>
-            )}
+
             {errorReadContract && (
               <ErrorContent>
                 <p>{errorReadContract.name}</p>
                 <p>{errorReadContract.message}</p>
               </ErrorContent>
             )}
-          </>
-        ) : (
-          <div className="flex flex-col gap-3 w-full">
-            {(txHash || latestTxHash) && (
-              <>
-                <CardContentItemTitle>Latest Tx Hash</CardContentItemTitle>
-                <CardContentItemValue className="text-sm">
-                  {txHash || latestTxHash}
-                </CardContentItemValue>
-              </>
-            )}
-            {latestTxReceipt && (
-              <>
-                <CardContentItemTitle>Latest Tx Receipt</CardContentItemTitle>
-                <CardContentItemValue className="text-sm">
-                  {JSON.stringify(latestTxReceipt, replacer)}
-                </CardContentItemValue>
-              </>
-            )}
-
-            {errorWriteContract && (
-              <ErrorContent>
-                <p>{errorWriteContract.name}</p>
-                <p>{errorWriteContract.message}</p>
-              </ErrorContent>
-            )}
-
-            {errorMessage && (
-              <ErrorContent>
-                <p>{errorMessage}</p>
-              </ErrorContent>
-            )}
           </div>
-        )}
-      </CardFooter>
+        </CardFooter>
+      )}
+
+      {(txHash || errorWriteContract || errorMessage) && (
+        <CardFooter className="flex flex-col items-stretch gap-2">
+          <div className="flex flex-col gap-2 w-full">
+            <CardContentItemTitle className="flex items-center gap-2">
+              Latest Tx Hash{' '}
+              <CopyToClipboard
+                type="icon"
+                iconSize={14}
+                copyText={`${txHash}`}
+              />
+            </CardContentItemTitle>
+            <ScrollArea className="pb-1.5">
+              <CardContentItemValue className="text-sm">
+                {txHash}
+              </CardContentItemValue>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </div>
+          {errorWriteContract && (
+            <ErrorContent>
+              <p>{errorWriteContract.name}</p>
+              <p>{errorWriteContract.message}</p>
+            </ErrorContent>
+          )}
+
+          {errorMessage && (
+            <ErrorContent>
+              <p>{errorMessage}</p>
+            </ErrorContent>
+          )}
+        </CardFooter>
+      )}
     </Card>
   );
 };

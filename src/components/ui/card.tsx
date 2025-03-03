@@ -65,11 +65,7 @@ const CardContentItem = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex flex-col gap-0.5', className)}
-    {...props}
-  />
+  <div ref={ref} className={cn('flex flex-col gap-1', className)} {...props} />
 ));
 CardContentItem.displayName = 'CardContentItem';
 
@@ -77,7 +73,7 @@ const CardContentItemTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, children, ...props }, ref) => (
-  <h3 ref={ref} className={cn('font-medium', className)} {...props}>
+  <h3 ref={ref} className={cn('font-medium text-sm', className)} {...props}>
     {children}
   </h3>
 ));
@@ -87,11 +83,7 @@ const CardContentItemValue = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('overflow-x-auto font-mono text-lg', className)}
-    {...props}
-  />
+  <p ref={ref} className={cn('font-mono text-base', className)} {...props} />
 ));
 CardContentItemValue.displayName = 'CardContentItemValue';
 

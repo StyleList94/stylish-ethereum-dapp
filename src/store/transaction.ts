@@ -12,15 +12,19 @@ export type TransactionState = {
 
 type FindPendingTxHashPayload = {
   address: `0x${string}`;
+  chainId: number;
 };
 
 type SetAddressToPendingTxHashPayload = {
   address: `0x${string}`;
+  chainId: number;
   txHash: `0x${string}`;
+  isReplace?: boolean;
 };
 
 type RemoveAddressToPendingTxHashPayload = {
   address: `0x${string}`;
+  chainId: number;
 };
 
 type SetPendingTxHashPayload = {
@@ -59,7 +63,7 @@ export const createTransactionSlice: StateCreator<
   ...initialTxState,
   findPendingTxHash: (payload) =>
     set((prevState) => {
-      const { address } = payload;
+      const { address, chainId } = payload;
       const pendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
@@ -68,8 +72,10 @@ export const createTransactionSlice: StateCreator<
         return prevState;
       }
 
+      const queryKey = `${address}_${chainId}`;
+
       const txHashQueue =
-        (JSON.parse(pendingTxList) as PendingTxList)?.[address] ?? [];
+        (JSON.parse(pendingTxList) as PendingTxList)?.[queryKey] ?? [];
 
       return {
         ...prevState,
@@ -80,7 +86,7 @@ export const createTransactionSlice: StateCreator<
 
   setAddressToPendingTxHash: (payload: SetAddressToPendingTxHashPayload) =>
     set((prevState) => {
-      const { address, txHash } = payload;
+      const { address, chainId, txHash, isReplace } = payload;
       const rawPendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
@@ -89,14 +95,18 @@ export const createTransactionSlice: StateCreator<
         rawPendingTxList ?? '{}',
       ) as PendingTxList;
 
-      const addressToPendingTxHashQueue = pendingTxList?.[address] ?? [];
-      const nextPendingTxHashQueue = [...addressToPendingTxHashQueue, txHash];
+      const targetKey = `${address}_${chainId}`;
+
+      const addressToPendingTxHashQueue = pendingTxList?.[targetKey] ?? [];
+      const nextPendingTxHashQueue = isReplace
+        ? [txHash, ...addressToPendingTxHashQueue.slice(1)]
+        : [...addressToPendingTxHashQueue, txHash];
 
       localStorage.setItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
         JSON.stringify({
           ...pendingTxList,
-          [address]: [...addressToPendingTxHashQueue, txHash],
+          [targetKey]: nextPendingTxHashQueue,
         }),
       );
 
@@ -111,7 +121,7 @@ export const createTransactionSlice: StateCreator<
     payload: RemoveAddressToPendingTxHashPayload,
   ) =>
     set((prevState) => {
-      const { address } = payload;
+      const { address, chainId } = payload;
       const rawPendingTxList = localStorage.getItem(
         `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
       );
@@ -120,10 +130,12 @@ export const createTransactionSlice: StateCreator<
         return prevState;
       }
 
+      const queryKey = `${address}_${chainId}`;
+
       const filteredPendingTxList = JSON.parse(
         rawPendingTxList,
       ) as PendingTxList;
-      const txHashQueue = filteredPendingTxList?.[address] ?? [];
+      const txHashQueue = filteredPendingTxList?.[queryKey] ?? [];
 
       let nextPendingTxHash: TransactionState['pendingTxHash'];
       let nextPendingTxHashQueue: TransactionState['pendingTxHashQueue'];
@@ -134,7 +146,7 @@ export const createTransactionSlice: StateCreator<
         nextPendingTxHash = null;
         nextPendingTxHashQueue = [];
 
-        Reflect.deleteProperty(filteredPendingTxList, address);
+        Reflect.deleteProperty(filteredPendingTxList, queryKey);
 
         if (!Object.keys(filteredPendingTxList).length) {
           localStorage.removeItem(`${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`);
@@ -147,7 +159,7 @@ export const createTransactionSlice: StateCreator<
           `${WEB_STORAGE_PREFIX}_PENDING_TX_HASH_LIST`,
           JSON.stringify({
             ...filteredPendingTxList,
-            [address]: txHashQueue,
+            [queryKey]: txHashQueue,
           }),
         );
       }
