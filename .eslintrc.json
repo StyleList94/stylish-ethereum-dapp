@@ -41,7 +41,10 @@
         "**/__tests__/**/*.[jt]s?(x)",
         "**/?(*.)+(spec|test).[jt]s?(x)"
       ],
-      "extends": ["plugin:@vitest/legacy-recommended", "plugin:testing-library/react"]
+      "extends": ["plugin:@vitest/legacy-recommended", "plugin:testing-library/react"],
+      "rules": {
+        "@typescript-eslint/unbound-method": "off"
+      }
     }
   ],
   "rules": {
