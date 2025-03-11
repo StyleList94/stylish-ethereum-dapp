@@ -17,8 +17,10 @@ describe('<Account />', () => {
     expect(
       await screen.findByText(/0x29072219f93D6893F9201Adfc31246169e785252/),
     ).toBeInTheDocument();
-
     expect(screen.getByText(/connected/)).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'copy-to-clipboard' }),
+    ).toBeInTheDocument();
 
     const buttonDisconnect = screen.getByRole('button', {
       name: /Disconnect/i,

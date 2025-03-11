@@ -45,6 +45,7 @@ const CopyToClipboard = ({
         <TooltipTrigger
           asChild={type === 'button'}
           onClick={handleCopyChainIdClick}
+          aria-label="copy-to-clipboard"
         >
           {type === 'button' ? (
             <Button variant="outline" size="icon" disabled={disabled}>

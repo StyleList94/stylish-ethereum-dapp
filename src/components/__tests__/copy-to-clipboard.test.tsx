@@ -9,7 +9,7 @@ describe('<CopyToClipboard />', () => {
   it('should be render', async () => {
     render(<CopyToClipboard copyText="Love" />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'copy-to-clipboard' });
 
     expect(button).toBeInTheDocument();
 
@@ -37,7 +37,7 @@ describe('<CopyToClipboard />', () => {
 
     render(<CopyToClipboard copyText="Love" />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: 'copy-to-clipboard' });
     fireEvent.click(button);
 
     await waitFor(() => {
