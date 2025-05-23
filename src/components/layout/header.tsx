@@ -20,7 +20,7 @@ const Header = () => (
       >
         <div className="flex justify-between w-full select-none">
           <Link
-            href="/public"
+            href="/"
             className="flex items-end font-display text-xl tracking-wide"
           >
             Stylish
