@@ -1,25 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useTheme } from 'next-themes';
-
+import useMounted from '@/hooks/use-mounted';
+import useThemeControl from '@/hooks/use-theme-control';
 import { cn } from '@/lib/utils';
 
 const ThemeControlSwitch = () => {
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme, resolvedTheme, systemTheme } = useTheme();
+  const mounted = useMounted();
 
-  const isDarkTheme = resolvedTheme === 'dark';
-
-  const toggleTheme = () => {
-    const targetTheme = systemTheme === 'dark' ? 'light' : 'dark';
-
-    setTheme(theme === 'system' ? targetTheme : 'system');
-  };
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { isDarkTheme, toggleTheme } = useThemeControl();
 
   if (!mounted) {
     return null;
@@ -30,7 +18,7 @@ const ThemeControlSwitch = () => {
       type="button"
       className={cn(
         'w-8 h-8',
-        'flex items-center justify-center text-2xl text-neutral-600',
+        'flex items-center justify-center text-xl text-neutral-600',
         'rounded-lg bg-white hover:bg-neutral-100',
         'dark:bg-neutral-900 dark:hover:bg-neutral-800 dark:text-neutral-300',
       )}
