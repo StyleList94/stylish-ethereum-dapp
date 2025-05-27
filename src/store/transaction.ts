@@ -48,7 +48,7 @@ export type TransactionSlice = TransactionState & TransactionActions;
 
 type PendingTxList = { [key: string]: `0x${string}`[] };
 
-export const initialTxState: TransactionState = {
+const initialTxState: TransactionState = {
   pendingTxHash: null,
   latestTxHash: null,
   pendingTxHashQueue: [],

@@ -13,7 +13,7 @@ export type CounterActions = {
 
 export type CounterSlice = CounterState & CounterActions;
 
-export const initialCounterState: CounterState = {
+const initialCounterState: CounterState = {
   count: 0,
 };
 
