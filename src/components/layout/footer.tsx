@@ -3,8 +3,8 @@ import { cn } from '@/lib/utils';
 const Footer = () => (
   <footer
     className={cn(
-      'flex flex-col gap-6 w-full max-w-[96rem] mx-auto px-6 py-8',
-      'bg-white dark:bg-neutral-900',
+      'flex flex-col gap-6',
+      ' w-full max-w-[96rem] mx-auto px-6 py-8',
     )}
   >
     <div

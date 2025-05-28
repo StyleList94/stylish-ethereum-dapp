@@ -19,7 +19,6 @@ const MainContainer = ({ children }: Props) => (
       className={cn(
         'flex flex-col max-w-[96rem] min-h-[calc(100vh-3.5rem-10rem)] mx-auto my-0 px-6',
         'text-black dark:text-white',
-        'bg-white dark:bg-neutral-900',
         'sm:min-h-[calc(100vh-3.5rem-8rem)]',
       )}
     >
