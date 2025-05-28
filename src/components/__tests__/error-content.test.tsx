@@ -5,7 +5,7 @@ import { render, screen } from '@/lib/test-utils';
 import ErrorContent from '../error-content';
 
 describe('<ErrorContent />', () => {
-  it('should be render', () => {
+  it('should render', () => {
     render(<ErrorContent>something</ErrorContent>);
 
     expect(screen.getByText(/something/)).toHaveStyle({

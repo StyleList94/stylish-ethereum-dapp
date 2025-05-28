@@ -10,24 +10,24 @@ export type TransactionState = {
   pendingTxHashQueue: `0x${string}`[];
 };
 
-type FindPendingTxHashPayload = {
+export type FindPendingTxHashPayload = {
   address: `0x${string}`;
   chainId: number;
 };
 
-type SetAddressToPendingTxHashPayload = {
+export type SetAddressToPendingTxHashPayload = {
   address: `0x${string}`;
   chainId: number;
   txHash: `0x${string}`;
   isReplace?: boolean;
 };
 
-type RemoveAddressToPendingTxHashPayload = {
+export type RemoveAddressToPendingTxHashPayload = {
   address: `0x${string}`;
   chainId: number;
 };
 
-type SetPendingTxHashPayload = {
+export type SetPendingTxHashPayload = {
   txHash: `0x${string}`;
 };
 

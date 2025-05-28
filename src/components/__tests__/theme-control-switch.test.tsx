@@ -34,7 +34,7 @@ describe('<ThemeControlSwitch />', () => {
 
   const mockSetTheme = vi.fn();
 
-  it('should be render', () => {
+  it('should render', () => {
     (useTheme as Mock).mockReturnValue({
       resolvedTheme: 'light',
       setTheme: mockSetTheme,

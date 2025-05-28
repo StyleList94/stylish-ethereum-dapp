@@ -5,6 +5,11 @@ import { createConfig, http, WagmiProvider } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { mock } from 'wagmi/connectors';
 
+import { createRootStore } from '@/store';
+import { StoreContext } from '@/providers/store-provider';
+
+vi.mock('zustand');
+
 const config = createConfig({
   chains: [mainnet, sepolia],
   connectors: [
@@ -35,9 +40,13 @@ const AllTheProviders = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <WagmiProvider config={config} reconnectOnMount={false}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </WagmiProvider>
+    <StoreContext.Provider value={createRootStore()}>
+      <WagmiProvider config={config} reconnectOnMount={false}>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      </WagmiProvider>
+    </StoreContext.Provider>
   );
 };
 
@@ -46,5 +55,15 @@ const customRender = (
   options?: Omit<RenderOptions, 'wrapper'>,
 ) => render(ui, { wrapper: AllTheProviders, ...options });
 
+const renderWithStore = (
+  ui: ReactElement,
+  store: ReturnType<typeof createRootStore>,
+) =>
+  render(ui, {
+    wrapper: ({ children }) => (
+      <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
+    ),
+  });
+
 export * from '@testing-library/react';
-export { customRender as render };
+export { customRender as render, renderWithStore };

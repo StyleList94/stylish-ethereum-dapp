@@ -81,7 +81,8 @@
         "devDependencies": [
           "**/*.test.?(ts|tsx)",
           "**/*.spec.?(ts|tsx)",
-          "**/test-utils.tsx"
+          "**/test-utils.tsx",
+          "**/__mocks__/*.ts"
         ]
       }
     ],

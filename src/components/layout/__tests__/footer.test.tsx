@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import Footer from '../footer';
 
 describe('<Footer />', () => {
-  it('should be render', () => {
+  it('should render', () => {
     render(<Footer />);
 
     expect(screen.getByLabelText(/GitHub/)).toHaveAttribute(

@@ -5,7 +5,7 @@ import { render, screen } from '@testing-library/react';
 import MainContainer from '../main-container';
 
 describe('<MainContainer />', () => {
-  it('should be rendered', () => {
+  it('should render', () => {
     render(
       <MainContainer>
         <p>Crazy Love</p>

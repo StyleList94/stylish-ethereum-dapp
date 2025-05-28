@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/card';
 
 describe('<Card />', () => {
-  it('should be render wrapper', () => {
+  it('should render wrapper', () => {
     render(<Card>Card Section</Card>);
 
     const element = screen.getByText(/Card Section/);
@@ -25,7 +25,7 @@ describe('<Card />', () => {
     );
   });
 
-  it('should be render header', () => {
+  it('should render header', () => {
     render(<CardHeader>Card Title</CardHeader>);
 
     const element = screen.getByText(/Card Title/);
@@ -35,7 +35,7 @@ describe('<Card />', () => {
     );
   });
 
-  it('should be render title', () => {
+  it('should render title', () => {
     render(<CardTitle>Lovely</CardTitle>);
 
     const element = screen.getByText(/Lovely/);
@@ -43,7 +43,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('leading-none font-semibold');
   });
 
-  it('should be render description', () => {
+  it('should render description', () => {
     render(<CardDescription>React</CardDescription>);
 
     const element = screen.getByText(/React/);
@@ -51,7 +51,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('text-muted-foreground text-sm');
   });
 
-  it('should be render content', () => {
+  it('should render content', () => {
     render(<CardContent className="flex flex-col">Sexy Body</CardContent>);
 
     const element = screen.getByText(/Sexy Body/);
@@ -59,7 +59,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('px-6');
   });
 
-  it('should be render content item', () => {
+  it('should render content item', () => {
     render(<CardContentItem>X-rated Content</CardContentItem>);
 
     const element = screen.getByText(/X-rated Content/);
@@ -67,7 +67,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('flex flex-col gap-1');
   });
 
-  it('should be render content item title', () => {
+  it('should render content item title', () => {
     render(<CardContentItemTitle>Command</CardContentItemTitle>);
 
     const element = screen.getByText(/Command/);
@@ -75,7 +75,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('font-medium text-sm');
   });
 
-  it('should be render content item value', () => {
+  it('should render content item value', () => {
     render(<CardContentItemValue>caffeinate</CardContentItemValue>);
 
     const element = screen.getByText(/caffeinate/);
@@ -83,7 +83,7 @@ describe('<Card />', () => {
     expect(element).toHaveClass('font-mono text-base');
   });
 
-  it('should be render footer', () => {
+  it('should render footer', () => {
     render(<CardFooter>Action</CardFooter>);
 
     const element = screen.getByText(/Action/);

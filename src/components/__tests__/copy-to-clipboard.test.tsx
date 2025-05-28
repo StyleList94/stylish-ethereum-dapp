@@ -6,7 +6,7 @@ import { userEvent } from '@testing-library/user-event';
 import CopyToClipboard from '../copy-to-clipboard';
 
 describe('<CopyToClipboard />', () => {
-  it('should be render', async () => {
+  it('should render', async () => {
     render(<CopyToClipboard copyText="Love" />);
 
     const button = screen.getByRole('button', { name: 'copy-to-clipboard' });

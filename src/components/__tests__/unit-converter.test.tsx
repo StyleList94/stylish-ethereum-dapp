@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import UnitConverter from '../unit-converter';
 
 describe('<UnitConverter />', () => {
-  it('should be render', () => {
+  it('should render', () => {
     render(<UnitConverter />);
 
     expect(screen.getByText('Unit Converter')).toBeInTheDocument();
