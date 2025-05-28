@@ -1,3 +1,5 @@
+import '@testing-library/jest-dom';
+
 import { fireEvent, renderWithStore, screen } from '@/lib/test-utils';
 
 import useRootStore from '@/store/hooks';

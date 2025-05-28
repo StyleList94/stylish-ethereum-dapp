@@ -9,5 +9,23 @@ export default defineConfig({
     globals: true,
     css: true,
     root: './src',
+    coverage: {
+      reporter: ['text'],
+      exclude: [
+        'coverage/**',
+        '**/node_modules/**',
+        '**/[.]**',
+        '**/__mocks__/**',
+        '**/vitest.config.*',
+        '**/*.d.ts',
+        'app/**/error.*',
+        'app/**/layout.*',
+        'app/**/not-found.*',
+        '**/assets/**/*',
+        '**/providers/**/*',
+        'lib/errors/*',
+      ],
+      reportsDirectory: '../coverage',
+    },
   },
 });

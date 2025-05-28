@@ -1,5 +1,5 @@
 import MainSection from '@/components/section/main-section';
 
-export default function IndexPage() {
+export default function MainPage() {
   return <MainSection />;
 }
