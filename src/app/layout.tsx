@@ -1,7 +1,11 @@
 import type { ReactNode } from 'react';
 import type { Metadata, Viewport } from 'next';
 
+import { headers } from 'next/headers';
+import { cookieToInitialState } from 'wagmi';
+
 import { inter, robotoMono, titilliumWeb } from '@/assets/fonts';
+import getConfig from '@/lib/config';
 
 import AppProvider from '@/providers/app-provider';
 
@@ -33,7 +37,15 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const initialState = cookieToInitialState(
+    getConfig(),
+    (await headers()).get('cookie'),
+  );
   return (
     <html
       lang="en"
@@ -41,7 +53,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       suppressHydrationWarning
     >
       <body>
-        <AppProvider>{children}</AppProvider>
+        <AppProvider initialState={initialState}>{children}</AppProvider>
       </body>
     </html>
   );
