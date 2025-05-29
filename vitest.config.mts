@@ -23,7 +23,6 @@ export default defineConfig({
         'app/**/not-found.*',
         '**/assets/**/*',
         '**/providers/**/*',
-        'lib/errors/*',
       ],
       reportsDirectory: '../coverage',
     },

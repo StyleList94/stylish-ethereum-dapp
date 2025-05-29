@@ -2,8 +2,8 @@ import { useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { toast } from 'sonner';
 
-import useRootStore from '@/store/hooks';
 import usePendingTransaction from '@/hooks/use-pending-transaction';
+import useRootStore from '@/store/hooks';
 
 const Updater = () => {
   const {
