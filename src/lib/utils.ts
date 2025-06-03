@@ -21,7 +21,7 @@ export function parseAbiFileToJSON(file: File) {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(
-          event?.target?.result?.toString() ?? '{ abi:[] }',
+          event?.target?.result?.toString() || '{ abi:[] }',
         ) as { abi: Abi };
 
         const { abi } = jsonData;

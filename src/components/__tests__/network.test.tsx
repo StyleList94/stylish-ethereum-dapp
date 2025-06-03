@@ -11,9 +11,12 @@ describe('<Network />', () => {
   it('should not connect wallet', () => {
     render(<Network />);
 
+    expect(screen.getByText('Network')).toBeInTheDocument();
+    expect(screen.getByText('Chain info from EVM wallet')).toBeInTheDocument();
+
     expect(screen.getByText(/wallet not connected/i)).toBeInTheDocument();
   });
-  it('should be detect and switching network', async () => {
+  it('should detect and switching network', async () => {
     render(
       <>
         <Account />
@@ -31,6 +34,7 @@ describe('<Network />', () => {
       await screen.findByText(/0x29072219f93D6893F9201Adfc31246169e785252/),
     ).toBeInTheDocument();
 
+    expect(screen.getByText('Chain Id')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(
       screen.getByRole('button', { name: /Ethereum/ }),

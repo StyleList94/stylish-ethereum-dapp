@@ -1,4 +1,4 @@
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/vitest';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ThemeProvider, useTheme } from 'next-themes';

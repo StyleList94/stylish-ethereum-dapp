@@ -23,6 +23,8 @@ export default defineConfig({
         'app/**/not-found.*',
         '**/assets/**/*',
         '**/providers/**/*',
+        'lib/config.ts',
+        'components/updater.tsx',
       ],
       reportsDirectory: '../coverage',
     },

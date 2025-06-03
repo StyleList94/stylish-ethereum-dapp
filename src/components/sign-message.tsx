@@ -82,8 +82,9 @@ const SignMessage = () => {
 
         <div className="grid w-full gap-2">
           <div className="grid w-full items-center gap-1.5">
-            <Label htmlFor="message">Signature</Label>
+            <Label htmlFor="signature-data">Signature</Label>
             <Input
+              id="signature-data"
               onChange={(e) => setInputSignature(e.target.value)}
               value={inputSignature}
             />
@@ -139,7 +140,7 @@ const SignMessage = () => {
         )}
         {recoveryAddress && (
           <div className="flex flex-col gap-1 w-full">
-            <CardContentItemTitle>Singing address</CardContentItemTitle>
+            <CardContentItemTitle>Signing address</CardContentItemTitle>
             <ScrollArea className="pb-1.5">
               <CardContentItemValue className="text-sm">
                 {recoveryAddress}
@@ -148,15 +149,19 @@ const SignMessage = () => {
             </ScrollArea>
           </div>
         )}
-        {errorSignMessage && (
-          <ErrorContent>
-            <p>{errorSignMessage.name}</p>
-            <p>{errorSignMessage.message}</p>
-          </ErrorContent>
-        )}
-        {errorRecoverMessage && (
-          <ErrorContent>{errorRecoverMessage}</ErrorContent>
-        )}
+        <div className="w-full">
+          {errorSignMessage && (
+            <ErrorContent>
+              <p>{errorSignMessage.name}</p>
+              <p>{errorSignMessage.message}</p>
+            </ErrorContent>
+          )}
+          {errorRecoverMessage && (
+            <ErrorContent>
+              <p>{errorRecoverMessage}</p>
+            </ErrorContent>
+          )}
+        </div>
       </CardFooter>
     </Card>
   );
