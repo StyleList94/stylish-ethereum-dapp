@@ -18,7 +18,7 @@ describe('Main page', () => {
       render(<MainPage />);
 
       expect(screen.getByText(/Stylish.DApp/i)).toBeInTheDocument();
-    } catch (error) {
+    } catch {
       /* DO NOTHING */
     }
   });

@@ -74,7 +74,7 @@ const Network = () => {
                   key={`${chainItem.id}-${chainItem.name}`}
                   onClick={() => {
                     startTransition(() => {
-                      switchChain?.({ chainId: chainItem.id });
+                      switchChain({ chainId: chainItem.id });
                     });
                   }}
                   disabled={

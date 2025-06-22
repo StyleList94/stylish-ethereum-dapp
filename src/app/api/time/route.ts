@@ -1,4 +1,4 @@
-export async function GET() {
+export function GET() {
   const serverTime = new Date().toISOString();
 
   return Response.json({ serverTime });

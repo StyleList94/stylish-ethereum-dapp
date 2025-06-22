@@ -23,17 +23,9 @@ describe('<CopyToClipboard />', () => {
   });
 
   it('should be copied item', async () => {
-    Object.defineProperty(window, 'navigator', {
-      value: {
-        clipboard: {
-          writeText: vi.fn().mockResolvedValue(undefined), // 기본적으로 resolved promise 반환
-        },
-      },
-    });
-
-    const {
-      clipboard: { writeText },
-    } = navigator;
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockResolvedValue();
 
     render(<CopyToClipboard copyText="Love" />);
 

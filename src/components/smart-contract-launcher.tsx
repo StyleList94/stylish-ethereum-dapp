@@ -101,7 +101,7 @@ const SmartContractLauncher = () => {
   );
 
   const isAvailableNetwork = useMemo(
-    () => !!address || (!address && !!selectedNetwork),
+    () => !!address || !!selectedNetwork,
     [address, selectedNetwork],
   );
 
@@ -123,7 +123,15 @@ const SmartContractLauncher = () => {
   };
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files![0];
+    const selectedFile = e.target.files?.[0];
+
+    if (!selectedFile) {
+      setSelectedAbi(null);
+      setIsErrorLoadAbi(true);
+      setAbiFunctions([]);
+      resetState();
+      return;
+    }
 
     try {
       const resAbi = await parseAbiFileToJSON(selectedFile);
@@ -167,7 +175,7 @@ const SmartContractLauncher = () => {
       (item) => item.type === 'function',
     );
 
-    if (inputLoadAbiElement?.current) {
+    if (inputLoadAbiElement.current) {
       inputLoadAbiElement.current.value = '';
     }
     setSelectedAbi(variant);
@@ -232,7 +240,7 @@ const SmartContractLauncher = () => {
     address: contractAddress as `0x${string}`,
     args:
       selectedAbiFunction?.inputs.map((param) =>
-        convertToAbiTypedValue(functionInputs[param.name!], param.type),
+        convertToAbiTypedValue(functionInputs[param.name ?? ''], param.type),
       ) ?? [],
     chainId: !address
       ? chains.find((chain) => chain.name === selectedNetwork)?.id
@@ -261,7 +269,7 @@ const SmartContractLauncher = () => {
       address: contractAddress as `0x${string}`,
       args:
         selectedAbiFunction?.inputs.map((param) =>
-          convertToAbiTypedValue(functionInputs[param.name!], param.type),
+          convertToAbiTypedValue(functionInputs[param.name ?? ''], param.type),
         ) ?? [],
     };
 
@@ -325,7 +333,7 @@ const SmartContractLauncher = () => {
           </Alert>
         )}
 
-        {abiFunctions && abiFunctions.length > 0 && (
+        {abiFunctions.length > 0 && (
           <div className="flex flex-col gap-2 w-full">
             <Separator className="my-2" />
             <div className="grid w-full max-w-sm items-center gap-1.5">
@@ -403,7 +411,7 @@ const SmartContractLauncher = () => {
                     name={param.name}
                     id={param.name}
                     onChange={handleFunctionInputsChange}
-                    value={functionInputs[param.name!] ?? ''}
+                    value={functionInputs[param.name ?? ''] ?? ''}
                   />
                 </div>
               ))}
@@ -450,11 +458,11 @@ const SmartContractLauncher = () => {
           <div className="flex flex-col gap-1 w-full">
             <CardContentItemTitle className="flex items-center gap-2">
               Result{' '}
-              {resultData && (
+              {(resultData as string | bigint | undefined) && (
                 <CopyToClipboard
                   type="icon"
                   iconSize={14}
-                  copyText={`${resultData as string | bigint}`}
+                  copyText={`${resultData as unknown as string | bigint}`}
                 />
               )}
             </CardContentItemTitle>
@@ -469,7 +477,7 @@ const SmartContractLauncher = () => {
                     )}
                   />
                 )}
-                {!isReading && resultData && (
+                {!isReading && (resultData as string | bigint | undefined) && (
                   <CardContentItemValue className="text-sm">
                     {resultData}
                   </CardContentItemValue>

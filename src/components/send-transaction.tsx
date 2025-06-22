@@ -54,9 +54,7 @@ const SendTransaction = () => {
 
   const { data: gas } = useEstimateGas({
     to: inputTo as `0x${string}`,
-    value: parseEther(
-      `${(+(inputValue || '0')).toFixed(18).replace(/\.?0+$/, '')}`,
-    ),
+    value: parseEther((+(inputValue || '0')).toFixed(18).replace(/\.?0+$/, '')),
     query: {
       enabled: !!inputTo && !!inputValue,
     },
@@ -128,10 +126,12 @@ const SendTransaction = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    sendTransaction?.({
+                    sendTransaction({
                       to: inputTo as `0x${string}`,
                       value: parseEther(
-                        `${(+(inputValue || '0')).toFixed(18).replace(/\.?0+$/, '')}`,
+                        (+(inputValue || '0'))
+                          .toFixed(18)
+                          .replace(/\.?0+$/, ''),
                       ),
                       gas,
                     });
@@ -162,7 +162,7 @@ const SendTransaction = () => {
                     <CopyToClipboard
                       type="icon"
                       iconSize={14}
-                      copyText={`${txHash}`}
+                      copyText={txHash}
                     />
                   </CardContentItemTitle>
                   <ScrollArea className="p-1.5">

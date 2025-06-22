@@ -78,7 +78,7 @@ const TxWithContext = () => {
         findPendingTxHash(payload);
       } else if (name === 'resetPendingTxHash') {
         resetPendingTxHash();
-      } else if (name === 'resetPendingTxHashQueue') {
+      } else {
         resetPendingTxHashQueue();
       }
     };
@@ -105,7 +105,7 @@ describe('Transaction Store', () => {
     getItemSpy.mockClear();
   });
 
-  it('should render with initial state', async () => {
+  it('should render with initial state', () => {
     const store = createRootStore();
     renderWithStore(<TxWithContext />, store);
 
@@ -114,7 +114,7 @@ describe('Transaction Store', () => {
     expect(store.getState().pendingTxHashQueue).toEqual([]);
   });
 
-  it('should set pending tx hash', async () => {
+  it('should set pending tx hash', () => {
     const store = createRootStore();
     renderWithStore(<TxWithContext />, store);
 
@@ -125,7 +125,7 @@ describe('Transaction Store', () => {
     );
   });
 
-  it('should control address to pending tx hash', async () => {
+  it('should control address to pending tx hash', () => {
     const store = createRootStore();
     renderWithStore(<TxWithContext />, store);
 
@@ -163,7 +163,7 @@ describe('Transaction Store', () => {
     expect(removeItemSpy).toHaveBeenCalledWith(storageKey);
   });
 
-  it('should be found pending tx hash and reset state', async () => {
+  it('should be found pending tx hash and reset state', () => {
     localStorage.setItem(
       storageKey,
       JSON.stringify({ [`${address}_${chainId}`]: [txHash] }),

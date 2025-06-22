@@ -1,11 +1,11 @@
+import type { Mock } from 'vitest';
+
 import '@testing-library/jest-dom/vitest';
 import * as wagmi from 'wagmi';
 import { erc20Abi } from 'viem';
-
 import { userEvent } from '@testing-library/user-event';
-import { fireEvent, render, screen } from '@/lib/test-utils';
 
-import type { Mock } from 'vitest';
+import { fireEvent, render, screen } from '@/lib/test-utils';
 
 import Account from '../account';
 import SmartContractLauncher from '../smart-contract-launcher';
@@ -32,7 +32,7 @@ beforeEach(() => {
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     status: 200,
-    json: async () => ({ message: 'fetched!' }),
+    json: () => ({ message: 'fetched!' }),
   });
 });
 

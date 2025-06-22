@@ -1,7 +1,7 @@
+import type { EstimateContractGasParameters } from 'viem';
+
 import { useCallback } from 'react';
 import { useAccount, usePublicClient } from 'wagmi';
-
-import type { EstimateContractGasParameters } from 'viem';
 
 export default function useEstimateContractGas() {
   const { address } = useAccount();
@@ -17,7 +17,7 @@ export default function useEstimateContractGas() {
         throw new Error('PublicClient is not initialized');
       }
 
-      return await client?.estimateContractGas({ ...args, account: address });
+      return await client.estimateContractGas({ ...args, account: address });
     },
     [address, client],
   );

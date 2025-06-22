@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest';
+
 import '@testing-library/jest-dom/vitest';
 import * as wagmi from 'wagmi';
 
 import { fireEvent, render, screen } from '@/lib/test-utils';
-
-import type { Mock } from 'vitest';
 
 import Account from '../account';
 import SendTransaction from '../send-transaction';
@@ -22,7 +22,7 @@ beforeEach(() => {
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     status: 200,
-    json: async () => ({ message: 'fetched!' }),
+    json: () => ({ message: 'fetched!' }),
   });
 });
 
@@ -35,7 +35,7 @@ describe('<SendTransaction />', () => {
       expect(screen.getByText('Transfer for native token')).toBeInTheDocument();
 
       expect(screen.getByText('Wallet not connected')).toBeInTheDocument();
-    } catch (error) {
+    } catch {
       /* DO NOTHING */
     }
   });
@@ -111,7 +111,7 @@ describe('<SendTransaction />', () => {
           '0xba42acf1c07c57c2187af118a2f4f8232b84d641156d633b3a2cf682b447c363',
         ),
       ).toBeInTheDocument();
-    } catch (error) {
+    } catch {
       /* DO NOTHING */
     }
   });
@@ -150,7 +150,7 @@ describe('<SendTransaction />', () => {
       expect(
         screen.getByText(/User rejected the request\./),
       ).toBeInTheDocument();
-    } catch (error) {
+    } catch {
       /* DO NOTHING */
     }
   });

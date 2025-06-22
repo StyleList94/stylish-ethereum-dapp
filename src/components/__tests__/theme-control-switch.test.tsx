@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest';
+
 import '@testing-library/jest-dom/vitest';
 
 import { fireEvent, render, screen } from '@testing-library/react';
 import { ThemeProvider, useTheme } from 'next-themes';
-
-import type { Mock } from 'vitest';
 
 import ThemeControlSwitch from '../theme-control-switch';
 

@@ -6,9 +6,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental';
 
 import getConfig from '@/lib/config';
-
 import StoreProvider from '@/providers/store-provider';
 import ThemeProvider from '@/providers/theme-provider';
+
 import Updater from '@/components/updater';
 import Toaster from '@/components/ui/sonner';
 

@@ -41,7 +41,7 @@ describe('cn', () => {
   });
 
   it('handles conditional class names correctly', () => {
-    const isTrue = true;
+    const isTrue = 6 + 24 === 30;
     const result = cn(
       'btn',
       isTrue && 'btn-primary',

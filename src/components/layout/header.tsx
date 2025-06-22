@@ -1,6 +1,7 @@
 import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
+
 import ThemeControlSwitch from '@/components/theme-control-switch';
 
 const Header = () => (

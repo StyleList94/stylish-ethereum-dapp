@@ -13,7 +13,7 @@ describe('api/time', () => {
   });
 
   it('should return serverTime in ISO string format', async () => {
-    const response = await GET();
+    const response = GET();
     expect(response).toBeInstanceOf(Response);
 
     const body = (await response.json()) as { serverTime: string };

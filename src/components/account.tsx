@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useTransition } from 'react';
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
 import { LoaderCircleIcon } from 'lucide-react';
 
@@ -19,7 +20,6 @@ import {
 import ErrorContent from '@/components/error-content';
 import { Button } from '@/components/ui/button';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { useState, useTransition } from 'react';
 import CopyToClipboard from '@/components/copy-to-clipboard';
 
 const Account = () => {
@@ -61,11 +61,7 @@ const Account = () => {
           <CardContentItem>
             <CardContentItemTitle className="flex items-center gap-2">
               Address
-              <CopyToClipboard
-                type="icon"
-                iconSize={14}
-                copyText={`${address}`}
-              />
+              <CopyToClipboard type="icon" iconSize={14} copyText={address} />
             </CardContentItemTitle>
             <ScrollArea className="pb-1.5">
               <CardContentItemValue>{address}</CardContentItemValue>

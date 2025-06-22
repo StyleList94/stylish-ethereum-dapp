@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest';
+
 import '@testing-library/jest-dom/vitest';
 import * as wagmi from 'wagmi';
 
 import { fireEvent, render, screen, waitFor } from '@/lib/test-utils';
-
-import type { Mock } from 'vitest';
 
 import Account from '../account';
 import SignMessage from '../sign-message';
@@ -22,7 +22,7 @@ const data =
   '0x5bfe6b411e67287eb49ad7fdb8ab8e41820bebab321cb1e7b04131197b1208b17d094445fc6442ac8113c1b730c219573907e29b964a02f12e03e0a09d8da8f71b';
 
 describe('<SignMessage />', () => {
-  it('should render', async () => {
+  it('should render', () => {
     (wagmi.useSignMessage as Mock).mockReturnValue({
       signMessage: signMessageMock,
       status: 'idle',

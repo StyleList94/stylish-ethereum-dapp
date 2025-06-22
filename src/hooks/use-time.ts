@@ -20,6 +20,7 @@ export default function useTime(): ResultUseTime {
 
     (async () => {
       const { serverTime } = await getServerTime();
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!ignore) {
         setCurrentTime(new Date(serverTime).getTime());
       }

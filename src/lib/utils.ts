@@ -1,13 +1,14 @@
+import type { Abi } from 'viem';
+
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
-import type { Abi } from 'viem';
-import BigNumber from 'bignumber.js';
+import { BigNumber } from 'bignumber.js';
 
 export const shortenAddress = (account: string) =>
   `${account.substring(0, 10)}...${account.substring(32)}`;
 
-export const replacer = (key: string, value: unknown) =>
+export const replacer = (_key: string, value: unknown) =>
   typeof value === 'bigint' ? value.toString() : value;
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,7 +22,7 @@ export function parseAbiFileToJSON(file: File) {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(
-          event?.target?.result?.toString() || '{ abi:[] }',
+          event.target?.result?.toString() || '{ abi:[] }',
         ) as { abi: Abi };
 
         const { abi } = jsonData;
@@ -31,7 +32,8 @@ export function parseAbiFileToJSON(file: File) {
       }
     };
 
-    reader.onerror = (error) => reject(error);
+    reader.onerror = (event) =>
+      reject(event.target?.error ?? new Error('Unable to parse abi'));
     reader.readAsText(file);
   });
 }

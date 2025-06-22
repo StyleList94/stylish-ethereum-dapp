@@ -1,9 +1,9 @@
+import type { Mock } from 'vitest';
+
 import '@testing-library/jest-dom/vitest';
 
 import { fireEvent, render, screen } from '@/lib/test-utils';
 import usePendingTransaction from '@/hooks/use-pending-transaction';
-
-import type { Mock } from 'vitest';
 
 import Account from '../account';
 import TransactionCenter from '../transaction-center';
@@ -19,7 +19,7 @@ beforeEach(() => {
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
     status: 200,
-    json: async () => ({ message: 'fetched!' }),
+    json: () => ({ message: 'fetched!' }),
   });
 });
 

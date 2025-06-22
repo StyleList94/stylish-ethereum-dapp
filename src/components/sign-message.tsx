@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import { useAccount, useSignMessage } from 'wagmi';
+import { CircleXIcon } from 'lucide-react';
+import { recoverMessageAddress } from 'viem';
 
 import {
   Card,
@@ -20,9 +22,7 @@ import Label from '@/components/ui/label';
 import Textarea from '@/components/ui/textarea';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
 import Input from '@/components/ui/input';
-import { recoverMessageAddress } from 'viem';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { CircleXIcon } from 'lucide-react';
 import CopyToClipboard from '@/components/copy-to-clipboard';
 
 const SignMessage = () => {
@@ -124,11 +124,7 @@ const SignMessage = () => {
           <div className="flex flex-col gap-1 w-full">
             <CardContentItemTitle className="flex items-center gap-2">
               Signature{' '}
-              <CopyToClipboard
-                type="icon"
-                iconSize={14}
-                copyText={`${signature}`}
-              />
+              <CopyToClipboard type="icon" iconSize={14} copyText={signature} />
             </CardContentItemTitle>
             <ScrollArea className="pb-1.5">
               <CardContentItemValue className="text-sm">

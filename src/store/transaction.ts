@@ -75,7 +75,7 @@ export const createTransactionSlice: StateCreator<
       const queryKey = `${address}_${chainId}`;
 
       const txHashQueue =
-        (JSON.parse(pendingTxList) as PendingTxList)?.[queryKey] ?? [];
+        (JSON.parse(pendingTxList) as PendingTxList)[queryKey] ?? [];
 
       return {
         ...prevState,
@@ -97,7 +97,7 @@ export const createTransactionSlice: StateCreator<
 
       const targetKey = `${address}_${chainId}`;
 
-      const addressToPendingTxHashQueue = pendingTxList?.[targetKey] ?? [];
+      const addressToPendingTxHashQueue = pendingTxList[targetKey] ?? [];
       const nextPendingTxHashQueue = isReplace
         ? [txHash, ...addressToPendingTxHashQueue.slice(1)]
         : [...addressToPendingTxHashQueue, txHash];
@@ -135,7 +135,7 @@ export const createTransactionSlice: StateCreator<
       const filteredPendingTxList = JSON.parse(
         rawPendingTxList,
       ) as PendingTxList;
-      const txHashQueue = filteredPendingTxList?.[queryKey] ?? [];
+      const txHashQueue = filteredPendingTxList[queryKey] ?? [];
 
       let nextPendingTxHash: TransactionState['pendingTxHash'];
       let nextPendingTxHashQueue: TransactionState['pendingTxHashQueue'];

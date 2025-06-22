@@ -24,14 +24,14 @@ const CounterWithContext = () => {
 };
 
 describe('Counter Store', () => {
-  it('should render with initial state of 0', async () => {
+  it('should render with initial state of 0', () => {
     const store = createRootStore();
     renderWithStore(<CounterWithContext />, store);
 
     expect(store.getState().count).toBe(0);
   });
 
-  it('should increase count by clicking a button', async () => {
+  it('should increase count by clicking a button', () => {
     const store = createRootStore();
     renderWithStore(<CounterWithContext />, store);
 
@@ -40,7 +40,7 @@ describe('Counter Store', () => {
     expect(store.getState().count).toBe(1);
   });
 
-  it('should decrease count by clicking a button', async () => {
+  it('should decrease count by clicking a button', () => {
     const store = createRootStore();
     renderWithStore(<CounterWithContext />, store);
 
