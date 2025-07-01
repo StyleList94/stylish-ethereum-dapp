@@ -68,7 +68,7 @@ const SendTransaction = () => {
   } = useSendTransaction();
 
   useEffect(() => {
-    queryClient.invalidateQueries({ queryKey });
+    void queryClient.invalidateQueries({ queryKey });
   }, [blockNumber, queryClient, queryKey]);
 
   return (
