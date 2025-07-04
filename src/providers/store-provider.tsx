@@ -13,9 +13,7 @@ export const StoreContext = createContext<StoreApi | undefined>(undefined);
 const StoreProvider = ({ children }: Props) => {
   const storeRef = useRef<StoreApi>(null);
 
-  if (!storeRef.current) {
-    storeRef.current = createRootStore();
-  }
+  storeRef.current ??= createRootStore();
 
   return <StoreContext value={storeRef.current}>{children}</StoreContext>;
 };

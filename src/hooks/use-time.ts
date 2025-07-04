@@ -32,7 +32,7 @@ export default function useTime(): ResultUseTime {
   }, []);
 
   const onTick = useEffectEvent(() => {
-    setCurrentTime((prevState) => (prevState || 0) + INTERVAL_TIME);
+    setCurrentTime((prevState) => (prevState ?? 0) + INTERVAL_TIME);
   });
 
   const stopTick = useCallback(() => {

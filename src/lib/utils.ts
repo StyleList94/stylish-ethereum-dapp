@@ -22,7 +22,7 @@ export function parseAbiFileToJSON(file: File) {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(
-          event.target?.result?.toString() || '{ abi:[] }',
+          event.target?.result?.toString() ?? '{ abi:[] }',
         ) as { abi: Abi };
 
         const { abi } = jsonData;
@@ -42,7 +42,7 @@ export const separateFunctionInput = (
   formattedName: string,
 ): [string, number] => {
   const [, functionName, argumentLength] =
-    formattedName.match(/^([a-zA-Z]+)\[(\d+)]$/) ?? [];
+    /^([a-zA-Z]+)\[(\d+)]$/.exec(formattedName) ?? [];
 
   if (functionName === '' || Number.isNaN(+argumentLength)) {
     throw new Error(
@@ -55,7 +55,7 @@ export const separateFunctionInput = (
 
 export const convertToAbiTypedValue = (value: string, type: string) => {
   if (/^u?int\d*(\[])*$/.test(type)) {
-    if (/\[]$/.test(type)) {
+    if (type.endsWith('[]')) {
       const valueArray = value.replace(/\s+/g, '').split(',');
       if (valueArray.every((item) => /^-?\d+$/.test(item))) {
         return valueArray.map(BigInt);
@@ -70,7 +70,7 @@ export const convertToAbiTypedValue = (value: string, type: string) => {
   if (type === 'bool') {
     return value.toLowerCase() === 'true';
   }
-  if (/\[]$/.test(type)) {
+  if (type.endsWith('[]')) {
     return value.replace(/\s+/g, '').split(',');
   }
 

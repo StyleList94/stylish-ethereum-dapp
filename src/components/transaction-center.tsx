@@ -59,7 +59,7 @@ const TransactionCenter = () => {
         </CardContent>
       )}
 
-      {(pendingTxHash || latestTxHash) && (
+      {(pendingTxHash ?? latestTxHash) && (
         <CardFooter className="flex-col items-start gap-3">
           {pendingTxHash && (
             <div className="flex flex-col gap-2 w-full">

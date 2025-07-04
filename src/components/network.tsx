@@ -51,7 +51,7 @@ const Network = () => {
               <CardContentItemTitle>Chain Id</CardContentItemTitle>
               <div className="flex items-center gap-1">
                 <CardContentItemValue>
-                  {chain?.id || 'Not supported'}
+                  {chain?.id ?? 'Not supported'}
                 </CardContentItemValue>
                 {chain?.id && <CopyToClipboard copyText={`${chain.id}`} />}
               </div>
@@ -59,7 +59,7 @@ const Network = () => {
             <CardContentItem>
               <CardContentItemTitle>Name</CardContentItemTitle>
               <CardContentItemValue>
-                {chain?.name || 'Not supported'}
+                {chain?.name ?? 'Not supported'}
               </CardContentItemValue>
             </CardContentItem>
           </CardContent>

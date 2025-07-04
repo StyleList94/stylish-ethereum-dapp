@@ -198,7 +198,7 @@ const SmartContractLauncher = () => {
           (func) =>
             func.name === functionName &&
             func.inputs.length === +argumentLength,
-        ) || null;
+        ) ?? null;
 
       setSelectedFunction(value);
       setSelectedAbiFunction(abiFunction);
@@ -265,7 +265,7 @@ const SmartContractLauncher = () => {
 
     const writeContractParams = {
       abi: abiFunctions,
-      functionName: selectedAbiFunction?.name || '',
+      functionName: selectedAbiFunction?.name ?? '',
       address: contractAddress as `0x${string}`,
       args:
         selectedAbiFunction?.inputs.map((param) =>
@@ -395,7 +395,7 @@ const SmartContractLauncher = () => {
                       <Badge variant="secondary">{param.type}</Badge>
                     </div>
 
-                    {/\[]$/.test(param.type) && (
+                    {param.type.endsWith('[]') && (
                       <Tooltip delayDuration={200}>
                         <TooltipTrigger>
                           <InfoIcon size={14} />
@@ -496,7 +496,7 @@ const SmartContractLauncher = () => {
         </CardFooter>
       )}
 
-      {(txHash || errorWriteContract || errorMessage) && (
+      {(txHash ?? errorWriteContract ?? errorMessage) && (
         <CardFooter className="flex flex-col items-stretch gap-2">
           <div className="flex flex-col gap-2 w-full">
             <CardContentItemTitle className="flex items-center gap-2">
