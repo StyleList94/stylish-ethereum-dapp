@@ -1,6 +1,5 @@
 import { cn } from '@/lib/utils';
 
-import Container from '@/components/layout/container';
 import Account from '@/components/account';
 import Network from '@/components/network';
 import TransactionCenter from '@/components/transaction-center';
@@ -11,45 +10,43 @@ import SendTransaction from '@/components/send-transaction';
 
 export default function MainPage() {
   return (
-    <Container>
-      <section
+    <section
+      className={cn(
+        'grid grid-cols-1 gap-4 py-6',
+        'md:grid-cols-2 md:items-start',
+      )}
+    >
+      <div
         className={cn(
-          'grid grid-cols-1 gap-4 py-6',
-          'md:grid-cols-2 md:items-start',
+          'grid grid-cols-1 gap-4',
+          'md:items-start',
+          'xl:grid-cols-2',
         )}
       >
-        <div
-          className={cn(
-            'grid grid-cols-1 gap-4',
-            'md:items-start',
-            'xl:grid-cols-2',
-          )}
-        >
-          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
-            <Account />
-            <Network />
-          </div>
-          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
-            <TransactionCenter />
-            <UnitConverter />
-          </div>
+        <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+          <Account />
+          <Network />
         </div>
-        <div
-          className={cn(
-            'grid grid-cols-1 gap-4',
-            'md:items-start',
-            'xl:grid-cols-2',
-          )}
-        >
-          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
-            <SmartContractLauncher />
-          </div>
-          <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
-            <SignMessage />
-            <SendTransaction />
-          </div>
+        <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+          <TransactionCenter />
+          <UnitConverter />
         </div>
-      </section>
-    </Container>
+      </div>
+      <div
+        className={cn(
+          'grid grid-cols-1 gap-4',
+          'md:items-start',
+          'xl:grid-cols-2',
+        )}
+      >
+        <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+          <SmartContractLauncher />
+        </div>
+        <div className={cn('grid grid-cols-1 gap-4', 'md:items-start')}>
+          <SignMessage />
+          <SendTransaction />
+        </div>
+      </div>
+    </section>
   );
 }
