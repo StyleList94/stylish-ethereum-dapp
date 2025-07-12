@@ -5,7 +5,7 @@ export default function useEffectEvent(fn: (...args: never[]) => unknown) {
 
   useInsertionEffect(() => {
     functionRef.current = fn;
-  }, [fn]);
+  });
 
   return useCallback((...args: never[]) => functionRef.current(...args), []);
 }
