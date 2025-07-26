@@ -29,4 +29,5 @@ export default defineConfig({
       reportsDirectory: '../coverage',
     },
   },
+  cacheDir: '../node_modules/.vite/',
 });

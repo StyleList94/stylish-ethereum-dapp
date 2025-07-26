@@ -7,16 +7,8 @@ export default function getConfig() {
     chains: [mainnet, sepolia],
     ssr: true,
     transports: {
-      [mainnet.id]: http(
-        process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-          ? `https://eth-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-          : undefined,
-      ),
-      [sepolia.id]: http(
-        process.env.NEXT_PUBLIC_ALCHEMY_API_KEY
-          ? `https://eth-sepolia.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY}`
-          : undefined,
-      ),
+      [mainnet.id]: http('/rpc/mainnet'),
+      [sepolia.id]: http('/rpc/sepolia'),
     },
     storage: createStorage({
       storage: cookieStorage,
