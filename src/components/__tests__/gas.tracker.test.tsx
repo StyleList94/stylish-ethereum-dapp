@@ -24,12 +24,11 @@ describe('<GasTracker />', () => {
   it('should be rendered', async () => {
     render(<GasTracker />);
 
-    expect(
-      await screen.findByText(
-        (content, element) => element?.textContent === 'Average: 20 gwei',
-      ),
-    ).toBeInTheDocument();
-    expect(screen.getByText('High: 30 gwei')).toBeInTheDocument();
-    expect(screen.getByText('Low: 10 gwei')).toBeInTheDocument();
+    expect(await screen.findByLabelText('average-icon')).toBeInTheDocument();
+    expect(screen.getByText('20 gwei')).toBeInTheDocument();
+    expect(screen.getByLabelText('high-icon')).toBeInTheDocument();
+    expect(screen.getByText('30 gwei')).toBeInTheDocument();
+    expect(screen.getByLabelText('low-icon')).toBeInTheDocument();
+    expect(screen.getByText('10 gwei')).toBeInTheDocument();
   });
 });
