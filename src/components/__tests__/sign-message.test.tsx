@@ -1,6 +1,7 @@
+import '@testing-library/jest-dom/vitest';
+
 import type { Mock } from 'vitest';
 
-import '@testing-library/jest-dom/vitest';
 import * as wagmi from 'wagmi';
 
 import { fireEvent, render, screen, waitFor } from '@/lib/test-utils';

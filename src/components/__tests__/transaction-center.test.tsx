@@ -1,6 +1,6 @@
-import type { Mock } from 'vitest';
-
 import '@testing-library/jest-dom/vitest';
+
+import type { Mock } from 'vitest';
 
 import { fireEvent, render, screen } from '@/lib/test-utils';
 import usePendingTransaction from '@/hooks/use-pending-transaction';

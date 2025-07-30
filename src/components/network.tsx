@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { useAccount, useSwitchChain } from 'wagmi';
+import { useAccount, useBlockNumber, useSwitchChain } from 'wagmi';
 
 import {
   Card,
@@ -31,6 +31,11 @@ const Network = () => {
 
   const [isPending, startTransition] = useTransition();
 
+  const { data: blockNumber } = useBlockNumber({
+    watch: true,
+    query: { enabled: isConnected },
+  });
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -48,12 +53,20 @@ const Network = () => {
         <>
           <CardContent className="flex flex-col gap-2">
             <CardContentItem>
-              <CardContentItemTitle>Chain Id</CardContentItemTitle>
+              <CardContentItemTitle className="flex items-center gap-2">
+                Chain Id
+                {chain?.id && (
+                  <CopyToClipboard
+                    type="icon"
+                    iconSize={14}
+                    copyText={`${chain.id}`}
+                  />
+                )}
+              </CardContentItemTitle>
               <div className="flex items-center gap-1">
                 <CardContentItemValue>
                   {chain?.id ?? 'Not supported'}
                 </CardContentItemValue>
-                {chain?.id && <CopyToClipboard copyText={`${chain.id}`} />}
               </div>
             </CardContentItem>
             <CardContentItem>
@@ -62,6 +75,14 @@ const Network = () => {
                 {chain?.name ?? 'Not supported'}
               </CardContentItemValue>
             </CardContentItem>
+            {blockNumber && (
+              <CardContentItem>
+                <CardContentItemTitle>Block</CardContentItemTitle>
+                <CardContentItemValue>
+                  {blockNumber.toString()}
+                </CardContentItemValue>
+              </CardContentItem>
+            )}
           </CardContent>
 
           <CardFooter className="flex-col items-start gap-2">

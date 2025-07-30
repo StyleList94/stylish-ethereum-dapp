@@ -24,6 +24,8 @@ describe('<GasTracker />', () => {
   it('should be rendered', async () => {
     render(<GasTracker />);
 
+    expect(await screen.findByLabelText('block-icon')).toBeInTheDocument();
+    expect(screen.getByText('23003980')).toBeInTheDocument();
     expect(await screen.findByLabelText('average-icon')).toBeInTheDocument();
     expect(screen.getByText('20 gwei')).toBeInTheDocument();
     expect(screen.getByLabelText('high-icon')).toBeInTheDocument();

@@ -1,7 +1,14 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { ChevronDownIcon, ChevronUpIcon, FuelIcon } from 'lucide-react';
+import { useEffect } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useBlockNumber } from 'wagmi';
+import {
+  BoxIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  FuelIcon,
+} from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
@@ -18,6 +25,8 @@ type ResponseData = {
 } & GasTrackerData;
 
 const GasTracker = () => {
+  const queryClient = useQueryClient();
+
   const { data } = useQuery({
     queryKey: ['gas-tracker'],
     queryFn: async () => {
@@ -25,8 +34,16 @@ const GasTracker = () => {
 
       return (await response.json()) as ResponseData;
     },
-    refetchInterval: 1000 * 60,
   });
+
+  const { data: blockNumber } = useBlockNumber({
+    watch: true,
+    chainId: 1,
+  });
+
+  useEffect(() => {
+    void queryClient.invalidateQueries({ queryKey: ['gas-tracker'] });
+  }, [blockNumber, queryClient]);
 
   if (!data) return null;
 
@@ -39,6 +56,11 @@ const GasTracker = () => {
         'font-mono text-xs text-zinc-800 dark:text-zinc-200',
       )}
     >
+      {data.lastBlock && (
+        <p className="flex items-center gap-1.5">
+          <BoxIcon aria-label="block-icon" size={12} /> {data.lastBlock}
+        </p>
+      )}
       {data.averageGasPrice && (
         <p className="flex items-center gap-1.5">
           <FuelIcon aria-label="average-icon" size={12} />{' '}
@@ -46,13 +68,13 @@ const GasTracker = () => {
         </p>
       )}
       {data.fastGasPrice && (
-        <p className="hidden @md:flex @md:items-center @md:gap-1.5">
+        <p className="hidden @lg:flex @lg:items-center @lg:gap-1.5">
           <ChevronUpIcon aria-label="high-icon" size={12} />{' '}
           {parseFloat((+data.fastGasPrice).toFixed(3))} gwei
         </p>
       )}
       {data.safeGasPrice && (
-        <p className="hidden @md:flex @md:items-center @md:gap-1.5">
+        <p className="hidden @lg:flex @lg:items-center @lg:gap-1.5">
           <ChevronDownIcon aria-label="low-icon" size={12} />{' '}
           {parseFloat((+data.safeGasPrice).toFixed(3))} gwei
         </p>

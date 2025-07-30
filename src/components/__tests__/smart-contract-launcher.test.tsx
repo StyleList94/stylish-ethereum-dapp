@@ -1,6 +1,7 @@
+import '@testing-library/jest-dom/vitest';
+
 import type { Mock } from 'vitest';
 
-import '@testing-library/jest-dom/vitest';
 import * as wagmi from 'wagmi';
 import { erc20Abi } from 'viem';
 import { userEvent } from '@testing-library/user-event';
