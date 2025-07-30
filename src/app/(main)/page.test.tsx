@@ -13,11 +13,11 @@ describe('Main page', () => {
     vi.unstubAllGlobals();
   });
 
-  it('renders without crashing', () => {
+  it('renders without crashing', async () => {
     try {
-      render(<MainPage />);
+      render(await MainPage());
 
-      expect(screen.getByText(/Stylish.DApp/i)).toBeInTheDocument();
+      expect(await screen.findByText(/Stylish.DApp/i)).toBeInTheDocument();
     } catch {
       /* DO NOTHING */
     }

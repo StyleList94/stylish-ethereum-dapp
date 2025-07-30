@@ -9,8 +9,6 @@ import getConfig from '@/lib/config';
 
 import AppProvider from '@/providers/app-provider';
 
-import Container from '@/components/layout/container';
-
 import '@/styles/global.css';
 
 export const metadata: Metadata = {
@@ -40,9 +38,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        <AppProvider initialState={initialState}>
-          <Container>{children}</Container>
-        </AppProvider>
+        <AppProvider initialState={initialState}>{children}</AppProvider>
       </body>
     </html>
   );
