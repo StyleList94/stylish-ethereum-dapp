@@ -92,3 +92,9 @@ pnpm create next-app --example https://github.com/StyleList94/stylish-ethereum-d
 RPC requests are implemented as proxy APIs. `/rpc/[network]`
 
 If you are using ‘Alchemy’, you can use the request without any customization by configuring the `ALCHEMY_API_KEY` environment variable.
+
+### Gas Tracker
+
+To use the gas tracker implemented with the Etherscan API, you must specify the Etherscan API Key in the `ETHERSCAN_API_KEY` environment variable.
+
+Since gas tracker requests are also handled by a proxy, you must specify the origin URL in the `ORIGIN` environment variable during deployment.
