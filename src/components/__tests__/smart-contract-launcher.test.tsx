@@ -30,11 +30,14 @@ vi.mock('@/hooks/use-estimate-contract-gas', () => ({
 vi.mock('');
 
 beforeEach(() => {
-  global.fetch = vi.fn().mockResolvedValue({
-    ok: true,
-    status: 200,
-    json: () => ({ message: 'fetched!' }),
-  });
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => ({ message: 'fetched!' }),
+    }),
+  );
 });
 
 describe('<SmartContractLauncher />', () => {

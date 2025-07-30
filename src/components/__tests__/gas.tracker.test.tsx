@@ -14,11 +14,14 @@ const mockData = {
 
 describe('<GasTracker />', () => {
   beforeEach(() => {
-    global.fetch = vi.fn().mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () => mockData,
-    });
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: () => mockData,
+      }),
+    );
   });
 
   it('should be rendered', async () => {

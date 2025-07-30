@@ -16,6 +16,7 @@ describe('api/gas-tracker', () => {
 
   beforeEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
     vi.resetAllMocks();
   });
 
@@ -34,12 +35,12 @@ describe('api/gas-tracker', () => {
       json: () => Promise.resolve(mockResponse),
     });
     vi.stubGlobal('fetch', fetchMock);
-    vi.stubEnv('ETHERSCAN_API_KEY', '486');
+    vi.stubEnv('ETHERSCAN_API_KEY', 'PW486');
 
     const res = await GET();
 
     expect(fetchMock).toHaveBeenCalledWith(
-      'https://api.etherscan.io/v2/api?chainid=1&module=gastracker&action=gasoracle&apikey=486',
+      'https://api.etherscan.io/v2/api?chainid=1&module=gastracker&action=gasoracle&apikey=PW486',
     );
 
     expect(res.status).toBe(200);
@@ -51,6 +52,25 @@ describe('api/gas-tracker', () => {
       averageGasPrice: '20',
       fastGasPrice: '30',
       status: 'OK',
+    });
+  });
+
+  it('returns 400 if failed to request', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      json: () =>
+        Promise.resolve({ ...mockResponse, result: 'Excessive limit' }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+    vi.stubEnv('ETHERSCAN_API_KEY', 'ETHEREUM');
+
+    const res = await GET();
+
+    expect(res.status).toBe(400);
+
+    const json = (await res.json()) as unknown;
+    expect(json).toEqual({
+      status: 'FAIL',
+      message: 'Excessive limit',
     });
   });
 });
