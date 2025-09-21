@@ -17,7 +17,9 @@ describe('Main page', () => {
     try {
       render(await MainPage());
 
-      expect(await screen.findByText(/Stylish.DApp/i)).toBeInTheDocument();
+      expect(
+        await screen.findByText(/Stylish Ethereum DApp/i),
+      ).toBeInTheDocument();
     } catch {
       /* DO NOTHING */
     }
