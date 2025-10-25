@@ -4,7 +4,7 @@ type SupportNetwork = 'mainnet' | 'sepolia';
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ network: SupportNetwork }> },
+  { params }: { params: Promise<{ network: string }> },
 ) {
   const { network } = await params;
 
@@ -21,7 +21,7 @@ export async function POST(
       : sepolia.rpcUrls.default.http[0],
   };
 
-  const targetUrl = networkToRpc[network];
+  const targetUrl = networkToRpc[network as SupportNetwork];
 
   if (!targetUrl) {
     return new Response(
@@ -37,9 +37,17 @@ export async function POST(
     );
   }
 
+  const headers = new Headers();
+  headers.set('Content-Type', 'application/json');
+
+  const authorization = req.headers.get('authorization');
+  if (authorization) {
+    headers.set('Authorization', authorization);
+  }
+
   const res = await fetch(targetUrl, {
     method: 'POST',
-    headers: req.headers,
+    headers,
     body,
   });
 

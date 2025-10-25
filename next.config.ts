@@ -9,13 +9,13 @@ const nextConfig: NextConfig = {
       use: ['@svgr/webpack'],
     });
 
-    config.resolve.fallback = { fs: false };
-
     config.plugins.push(
       new context.webpack.IgnorePlugin({
         resourceRegExp: /^(pino-pretty|encoding)$/,
       }),
     );
+
+    config.externals.push('@react-native-async-storage/async-storage');
 
     return config;
   },

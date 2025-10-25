@@ -1,8 +1,4 @@
-import { dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-import { FlatCompat } from '@eslint/eslintrc';
-import tseslint from 'typescript-eslint';
+import { defineConfig, globalIgnores } from 'eslint/config';
 import stylish from 'eslint-config-stylish';
 import stylishReact from 'eslint-config-stylish/react';
 import stylishReactHooks from 'eslint-config-stylish/react-hooks';
@@ -10,18 +6,18 @@ import stylishTypeScript from 'eslint-config-stylish/typescript';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
 import vitest from '@vitest/eslint-plugin';
 import testingLibrary from 'eslint-plugin-testing-library';
+import nextPlugin from '@next/eslint-plugin-next';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-export default tseslint.config(
-  ...compat.config({
-    extends: ['plugin:@next/next/core-web-vitals'],
-  }),
+export default defineConfig(
+  nextPlugin.configs['core-web-vitals'],
+  globalIgnores([
+    'node_modules/**',
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'vitest.config.mts',
+  ]),
   {
     files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     extends: [stylish],
