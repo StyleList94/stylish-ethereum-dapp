@@ -45,19 +45,38 @@ export async function POST(
     headers.set('Authorization', authorization);
   }
 
-  const res = await fetch(targetUrl, {
-    method: 'POST',
-    headers,
-    body,
-  });
+  try {
+    const res = await fetch(targetUrl, {
+      method: 'POST',
+      headers,
+      body,
+      signal: AbortSignal.timeout(30000),
+    });
 
-  const data = await res.arrayBuffer();
+    const data = await res.arrayBuffer();
 
-  return new Response(data, {
-    status: res.status,
-    statusText: res.statusText,
-    headers: { 'Content-Type': 'application/json' },
-  });
+    return new Response(data, {
+      status: res.status,
+      statusText: res.statusText,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    return new Response(
+      JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        error: {
+          code: -32603,
+          message:
+            error instanceof Error ? error.message : 'Internal RPC error',
+        },
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      },
+    );
+  }
 }
 
 export const dynamic = 'force-dynamic';

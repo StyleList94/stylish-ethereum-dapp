@@ -1,10 +1,14 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-
-import useEffectEvent from '@/hooks/use-effect-event';
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useRef,
+  useState,
+} from 'react';
 
 type ResultUseTime = { currentTime: number | null; stopTick: () => void };
 
-const INTERVAL_TIME = 100;
+const INTERVAL_TIME = 1000;
 
 const getServerTime = async () => {
   const res = await fetch('/api/time');
@@ -13,7 +17,7 @@ const getServerTime = async () => {
 
 export default function useTime(): ResultUseTime {
   const [currentTime, setCurrentTime] = useState<number | null>(null);
-  const intervalId = useRef<number | null>(null);
+  const intervalId = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     let ignore = false;
@@ -48,7 +52,7 @@ export default function useTime(): ResultUseTime {
     return () => {
       stopTick();
     };
-  }, [onTick, stopTick]);
+  }, [stopTick]);
 
   return { currentTime, stopTick };
 }

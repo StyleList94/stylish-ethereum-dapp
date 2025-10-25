@@ -196,8 +196,7 @@ const SmartContractLauncher = () => {
       const abiFunction =
         abiFunctions.find(
           (func) =>
-            func.name === functionName &&
-            func.inputs.length === +argumentLength,
+            func.name === functionName && func.inputs.length === argumentLength,
         ) ?? null;
 
       setSelectedFunction(value);

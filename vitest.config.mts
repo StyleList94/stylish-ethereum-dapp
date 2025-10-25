@@ -26,7 +26,6 @@ export default defineConfig({
         'lib/config.ts',
         'components/updater.tsx',
         'components/layout/container.tsx',
-        'hooks/use-effect-event.ts',
         'hooks/use-interval.ts',
         'hooks/use-launch.ts',
         'hooks/use-time.ts',

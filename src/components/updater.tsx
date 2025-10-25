@@ -32,7 +32,10 @@ const Updater = () => {
           action: chain?.blockExplorers?.default.url && {
             label: 'View explorer',
             onClick: () => {
-              window.open(chain.blockExplorers?.default.url, '_blank');
+              window.open(
+                `${chain.blockExplorers?.default.url}/tx/${latestTxHash}`,
+                '_blank',
+              );
             },
           },
         },

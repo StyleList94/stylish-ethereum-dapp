@@ -7,7 +7,7 @@ import ThemeControlSwitch from '@/components/theme-control-switch';
 const HeaderContent = () => (
   <div
     className={cn(
-      'flex items-center w-full h-full 2xl:max-w-[96rem] px-6 py-3 mx-auto',
+      'flex items-center w-full h-full 2xl:max-w-384 px-6 py-3 mx-auto',
     )}
   >
     <div className="flex justify-between w-full select-none">
