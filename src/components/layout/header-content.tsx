@@ -2,8 +2,6 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 
-import ThemeControlSwitch from '@/components/theme-control-switch';
-
 const HeaderContent = () => (
   <div
     className={cn(
@@ -19,9 +17,7 @@ const HeaderContent = () => (
         <span className="text-sm leading-relaxed tracking-wider">.DAPP</span>
       </Link>
 
-      <div className="flex items-center gap-2">
-        <ThemeControlSwitch />
-      </div>
+      <div className="flex items-center gap-2">{/* 추가할꺼염 */}</div>
     </div>
   </div>
 );

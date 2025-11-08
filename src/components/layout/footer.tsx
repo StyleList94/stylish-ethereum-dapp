@@ -1,5 +1,7 @@
 import { cn } from '@/lib/utils';
 
+import ThemeControlSwitch from '../theme-control-switch';
+
 const Footer = () => (
   <footer
     className={cn('flex flex-col gap-6', ' w-full max-w-384 mx-auto px-6 py-8')}
@@ -7,10 +9,10 @@ const Footer = () => (
     <div
       className={cn(
         'flex flex-col gap-3',
-        'sm:flex-row sm:justify-between sm:gap-4',
+        'sm:flex-row sm:justify-between sm:items-center sm:gap-4',
       )}
     >
-      <div className="flex items-center gap-4 ">
+      <div className="flex items-center gap-4">
         <a
           href="https://github.com/StyleList94/stylish-ethereum-dapp.git"
           target="_blank"
@@ -34,6 +36,10 @@ const Footer = () => (
             />
           </svg>
         </a>
+      </div>
+
+      <div className="h-8">
+        <ThemeControlSwitch />
       </div>
     </div>
     <div>

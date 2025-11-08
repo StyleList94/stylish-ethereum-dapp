@@ -1,62 +1,33 @@
 'use client';
 
+import { MonitorIcon, MoonIcon, SunIcon } from 'lucide-react';
+
 import useMounted from '@/hooks/use-mounted';
 import useThemeControl from '@/hooks/use-theme-control';
 
-import Switch from '@/components/ui/switch';
+import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group';
 
 const ThemeControlSwitch = () => {
   const mounted = useMounted();
 
-  const { isDarkTheme, toggleTheme } = useThemeControl();
+  const { theme, setTheme } = useThemeControl();
 
   if (!mounted) {
     return null;
   }
 
   return (
-    <Switch
-      checked={isDarkTheme}
-      onCheckedChange={toggleTheme}
-      iconClassName="text-zinc-500/80 dark:text-zinc-400"
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-label="icon-light-mode"
-      >
-        <circle cx={12} cy={12} r={4} />
-        <path d="M12 2v2" />
-        <path d="M12 20v2" />
-        <path d="m4.93 4.93 1.41 1.41" />
-        <path d="m17.66 17.66 1.41 1.41" />
-        <path d="M2 12h2" />
-        <path d="M20 12h2" />
-        <path d="m6.34 17.66-1.41 1.41" />
-        <path d="m19.07 4.93-1.41 1.41" />
-      </svg>
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="1em"
-        height="1em"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-label="icon-dark-mode"
-      >
-        <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
-      </svg>
-    </Switch>
+    <ToggleGroup type="single" value={theme} onValueChange={setTheme} size="sm">
+      <ToggleGroupItem value="light">
+        <SunIcon aria-label="icon-light-mode" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="system">
+        <MonitorIcon aria-label="icon-system-mode" />
+      </ToggleGroupItem>
+      <ToggleGroupItem value="dark">
+        <MoonIcon aria-label="icon-dark-mode" />
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 };
 

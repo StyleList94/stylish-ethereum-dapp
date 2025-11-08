@@ -2,7 +2,8 @@ import '@testing-library/jest-dom/vitest';
 
 import type { Mock } from 'vitest';
 
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeProvider, useTheme } from 'next-themes';
 
 import ThemeControlSwitch from '../theme-control-switch';
@@ -34,9 +35,13 @@ describe('<ThemeControlSwitch />', () => {
 
   const mockSetTheme = vi.fn();
 
-  it('should render', () => {
+  beforeEach(() => {
+    mockSetTheme.mockClear();
+  });
+
+  it('should render all theme toggle buttons', () => {
     (useTheme as Mock).mockReturnValue({
-      resolvedTheme: 'light',
+      theme: 'light',
       setTheme: mockSetTheme,
     });
 
@@ -46,12 +51,14 @@ describe('<ThemeControlSwitch />', () => {
       </ThemeProvider>,
     );
 
-    expect(screen.getByRole('switch')).toBeInTheDocument();
+    expect(screen.getByLabelText(/icon-light-mode/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/icon-system-mode/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/icon-dark-mode/i)).toBeInTheDocument();
   });
 
   test('today is sunny', () => {
     (useTheme as Mock).mockReturnValue({
-      resolvedTheme: 'light',
+      theme: 'light',
       setTheme: mockSetTheme,
     });
 
@@ -61,13 +68,17 @@ describe('<ThemeControlSwitch />', () => {
       </ThemeProvider>,
     );
 
-    const lightModeIcon = screen.getByLabelText(/icon-light-mode/i);
-    expect(lightModeIcon).toBeInTheDocument();
+    const radios = screen.getAllByRole('radio');
+    const lightButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-light-mode/i),
+    );
+
+    expect(lightButton).toHaveAttribute('data-state', 'on');
   });
 
   test('history is made at night', () => {
     (useTheme as Mock).mockReturnValue({
-      resolvedTheme: 'dark',
+      theme: 'dark',
       setTheme: mockSetTheme,
     });
 
@@ -77,35 +88,39 @@ describe('<ThemeControlSwitch />', () => {
       </ThemeProvider>,
     );
 
-    const darkModeIcon = screen.getByLabelText(/icon-dark-mode/i);
-    expect(darkModeIcon).toBeInTheDocument();
+    const radios = screen.getAllByRole('radio');
+    const darkButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-dark-mode/i),
+    );
+
+    expect(darkButton).toHaveAttribute('data-state', 'on');
   });
 
-  it('change dark mode', () => {
+  test('what the system wants', () => {
     (useTheme as Mock).mockReturnValue({
       theme: 'system',
-      resolvedTheme: 'light',
-      systemTheme: 'light',
       setTheme: mockSetTheme,
     });
 
     render(
-      <ThemeProvider attribute="class">
+      <ThemeProvider attribute="class" defaultTheme="system">
         <ThemeControlSwitch />
       </ThemeProvider>,
     );
 
-    const switchButton = screen.getByRole('switch');
+    const radios = screen.getAllByRole('radio');
+    const darkButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-system-mode/i),
+    );
 
-    fireEvent.click(switchButton);
-    expect(mockSetTheme).toHaveBeenCalledWith('dark');
+    expect(darkButton).toHaveAttribute('data-state', 'on');
   });
 
-  it('turned off the switch', () => {
+  it('change to dark mode', async () => {
+    const user = userEvent.setup();
+
     (useTheme as Mock).mockReturnValue({
-      theme: 'dark',
-      resolvedTheme: 'dark',
-      systemTheme: 'light',
+      theme: 'light',
       setTheme: mockSetTheme,
     });
 
@@ -115,9 +130,64 @@ describe('<ThemeControlSwitch />', () => {
       </ThemeProvider>,
     );
 
-    const switchButton = screen.getByRole('switch');
+    const radios = screen.getAllByRole('radio');
+    const darkButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-dark-mode/i),
+    );
 
-    fireEvent.click(switchButton);
-    expect(mockSetTheme).toHaveBeenCalledWith('system');
+    if (darkButton) {
+      await user.click(darkButton);
+      expect(mockSetTheme).toHaveBeenCalledWith('dark');
+    }
+  });
+
+  it('change to light mode', async () => {
+    const user = userEvent.setup();
+
+    (useTheme as Mock).mockReturnValue({
+      theme: 'dark',
+      setTheme: mockSetTheme,
+    });
+
+    render(
+      <ThemeProvider attribute="class" defaultTheme="dark">
+        <ThemeControlSwitch />
+      </ThemeProvider>,
+    );
+
+    const radios = screen.getAllByRole('radio');
+    const lightButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-light-mode/i),
+    );
+
+    if (lightButton) {
+      await user.click(lightButton);
+      expect(mockSetTheme).toHaveBeenCalledWith('light');
+    }
+  });
+
+  it('change to system theme', async () => {
+    const user = userEvent.setup();
+
+    (useTheme as Mock).mockReturnValue({
+      theme: 'light',
+      setTheme: mockSetTheme,
+    });
+
+    render(
+      <ThemeProvider attribute="class">
+        <ThemeControlSwitch />
+      </ThemeProvider>,
+    );
+
+    const radios = screen.getAllByRole('radio');
+    const systemButton = radios.find((radio) =>
+      within(radio).queryByLabelText(/icon-system-mode/i),
+    );
+
+    if (systemButton) {
+      await user.click(systemButton);
+      expect(mockSetTheme).toHaveBeenCalledWith('system');
+    }
   });
 });

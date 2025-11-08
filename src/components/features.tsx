@@ -84,7 +84,7 @@ export default function Features() {
 
   return (
     <>
-      <div className="sticky top-14 z-10 flex flex-wrap items-center gap-2 py-4 bg-background">
+      <div className="sticky top-14 z-10 flex flex-wrap items-center gap-2 py-4">
         <div
           role="tablist"
           className="bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]"
