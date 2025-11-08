@@ -2,22 +2,20 @@ import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  webpack: (config, context) => {
-    config.module.rules.push({
-      test: /\.svg$/i,
-      issuer: /\.[jt]sx?$/,
-      use: ['@svgr/webpack'],
-    });
+  reactCompiler: true,
 
-    config.plugins.push(
-      new context.webpack.IgnorePlugin({
-        resourceRegExp: /^(pino-pretty|encoding)$/,
-      }),
-    );
-
-    config.externals.push('@react-native-async-storage/async-storage');
-
-    return config;
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+    resolveAlias: {
+      'pino-pretty': {},
+      encoding: {},
+      '@react-native-async-storage/async-storage': {},
+    },
   },
 };
 
