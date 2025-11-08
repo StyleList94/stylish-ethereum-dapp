@@ -2,7 +2,7 @@ import { RocketIcon } from 'lucide-react';
 
 export default function HeroSection() {
   return (
-    <div className="relative w-full min-h-[60vh] flex items-center overflow-hidden">
+    <div className="relative w-full flex items-center overflow-hidden">
       <div className="relative z-10 max-w-7xl pt-20 pb-12 w-full">
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full border border-border bg-background/50 backdrop-blur-sm">

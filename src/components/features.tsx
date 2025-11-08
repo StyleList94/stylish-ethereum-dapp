@@ -1,6 +1,12 @@
 'use client';
 
-import { type MouseEventHandler, useCallback, useMemo, useState } from 'react';
+import {
+  type MouseEventHandler,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { cn } from '@/lib/utils';
 
@@ -49,6 +55,7 @@ const TabContent = ({
 );
 
 export default function Features() {
+  const sectionRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<TabValue>('all');
 
   const shouldRender = useCallback(
@@ -84,7 +91,7 @@ export default function Features() {
 
   return (
     <>
-      <div className="sticky top-14 z-10 flex flex-wrap items-center gap-2 py-4">
+      <div className="sticky bg-white dark:bg-neutral-900 top-14 z-10 flex flex-wrap items-center gap-2 py-4">
         <div
           role="tablist"
           className="bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]"
@@ -94,7 +101,15 @@ export default function Features() {
               key={tab.value}
               value={tab.value}
               isActive={activeTab === tab.value}
-              onClick={() => setActiveTab(tab.value)}
+              onClick={() => {
+                setActiveTab(tab.value);
+                sectionRef.current?.scrollIntoView({
+                  block: 'start',
+                });
+                sectionRef.current?.focus({
+                  preventScroll: true,
+                });
+              }}
             >
               {tab.text}
             </TabContent>
@@ -103,12 +118,14 @@ export default function Features() {
       </div>
 
       <section
+        ref={sectionRef}
         role="tabpanel"
         id={`tabpanel-${activeTab}`}
         aria-labelledby={`tab-${activeTab}`}
         className={cn(
           'grid grid-cols-1 gap-4 py-6',
           'md:grid-cols-2 md:items-start',
+          'scroll-mt-32',
         )}
       >
         <div
