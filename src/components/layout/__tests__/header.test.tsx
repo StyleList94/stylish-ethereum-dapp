@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom/vitest';
 
-import { render, screen } from '@testing-library/react';
+import { render, screen } from '@/lib/test-utils';
 
 import Header from '../header';
 
@@ -10,5 +10,9 @@ describe('<Header />', () => {
 
     expect(screen.getByText('Stylish')).toBeInTheDocument();
     expect(screen.getByText('.DAPP')).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', { name: 'Connect Wallet' }),
+    ).toBeInTheDocument();
   });
 });

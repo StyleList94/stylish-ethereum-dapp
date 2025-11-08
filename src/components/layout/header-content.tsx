@@ -2,6 +2,8 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/utils';
 
+import Web3Status from '../web3-status';
+
 const HeaderContent = () => (
   <div
     className={cn(
@@ -17,7 +19,9 @@ const HeaderContent = () => (
         <span className="text-sm leading-relaxed tracking-wider">.DAPP</span>
       </Link>
 
-      <div className="flex items-center gap-2">{/* 추가할꺼염 */}</div>
+      <div className="flex items-center gap-2">
+        <Web3Status />
+      </div>
     </div>
   </div>
 );

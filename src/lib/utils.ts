@@ -6,7 +6,7 @@ import { twMerge } from 'tailwind-merge';
 import { BigNumber } from 'bignumber.js';
 
 export const shortenAddress = (account: string) =>
-  `${account.substring(0, 10)}...${account.substring(32)}`;
+  `${account.substring(0, 6)}...${account.substring(38)}`;
 
 export const replacer = (_key: string, value: unknown) =>
   typeof value === 'bigint' ? value.toString() : value;
