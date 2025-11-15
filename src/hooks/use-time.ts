@@ -6,16 +6,20 @@ import {
   useState,
 } from 'react';
 
+type UseTimeOption = { intervalTime?: number };
+
 type ResultUseTime = { currentTime: number | null; stopTick: () => void };
 
-const INTERVAL_TIME = 1000;
+const DEFAULT_INTERVAL_TIME = 1000;
 
 const getServerTime = async () => {
   const res = await fetch('/api/time');
   return (await res.json()) as { serverTime: string };
 };
 
-export default function useTime(): ResultUseTime {
+export default function useTime({
+  intervalTime = DEFAULT_INTERVAL_TIME,
+}: UseTimeOption = {}): ResultUseTime {
   const [currentTime, setCurrentTime] = useState<number | null>(null);
   const intervalId = useRef<NodeJS.Timeout | null>(null);
 
@@ -36,7 +40,7 @@ export default function useTime(): ResultUseTime {
   }, []);
 
   const onTick = useEffectEvent(() => {
-    setCurrentTime((prevState) => (prevState ?? 0) + INTERVAL_TIME);
+    setCurrentTime((prevState) => (prevState ?? 0) + intervalTime);
   });
 
   const stopTick = useCallback(() => {
@@ -47,12 +51,10 @@ export default function useTime(): ResultUseTime {
   }, []);
 
   useEffect(() => {
-    intervalId.current = setInterval(onTick, INTERVAL_TIME);
+    intervalId.current = setInterval(onTick, intervalTime);
 
-    return () => {
-      stopTick();
-    };
-  }, [stopTick]);
+    return stopTick;
+  }, [intervalTime, stopTick]);
 
   return { currentTime, stopTick };
 }
