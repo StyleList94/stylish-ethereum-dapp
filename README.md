@@ -1,3 +1,12 @@
+> [!WARNING]
+> **⚠️ DEPRECATED**: This repository has been archived and is no longer maintained.
+>
+> Please use [**stylish-app-kit**](https://github.com/StyleList94/stylish-app-kit) instead.
+>
+> ```bash
+> pnpm create next-app --example https://github.com/StyleList94/stylish-app-kit/tree/main/templates/ethereum-dapp
+> ```
+
 # Stylish Ethereum DApp
 
 Create stylish EVM based DApp
